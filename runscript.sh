@@ -1,12 +1,12 @@
 #!/bin/bash -l
 #SBATCH -C cgpu01
 #SBATCH -c 20
-#SBATCH --mem=6G
+#SBATCH --mem=60G
 #SBATCH --gres=gpu:2
 #SBATCH --partition=short
-#SBATCH --time=00:05:00
-#SBATCH --job-name=hallo
-#SBATCH --output=/work/smfrrohk/Masterarbeit/logs/hallo.log
+#SBATCH --time=02:00:00
+#SBATCH --job-name=test
+#SBATCH --output=/work/smfrrohk/Masterarbeit/logs/test.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
 #-------------------------------------
