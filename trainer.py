@@ -6,21 +6,9 @@ from sklearn import datasets
 import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
+from torch.utils.data import DataLoader
 
-
-class Net(nn.Module):
-    def __init__(self):
-        super(Net, self).__init__()
-        self.fc1 = nn.Linear(101, 200)
-        self.fc2 = nn.Linear(200, 200)
-        self.fc3 = nn.Linear(200, 85)
-
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = self.fc3(x)
-        return x
-
+from kickoff_dataset import KickoffDataset
 
 """
 input = torch.randn(1, 101)
@@ -48,7 +36,9 @@ batch_size = 100
 learning_rate = 0.001
 
 # 0) prepare data
-bc = datasets.load_breast_cancer()
+dataset = KickoffDataset("[SmoothSteps]edf30761-0557-481b-90fe-d46df739f8ee_10.pbz2")
+dataloader = DataLoader(dataset=dataset, batch_size=4, shuffle=True, num_workers=0)
+
 X, y = bc.data, bc.target
 
 n_samples, n_features = X.shape
@@ -69,18 +59,20 @@ y_test = y_test.view(y_test.shape[0], 1)
 
 
 # 1) model
-
-class LogisticRegression(nn.Module):
-
-    def __init__(self, n_input_features):
-        super(LogisticRegression, self).__init__()
-        self.linear = nn.Linear(n_input_features, 1)
+class Net(nn.Module):
+    def __init__(self):
+        super(Net, self).__init__()
+        self.fc1 = nn.Linear(101, 200)
+        self.fc2 = nn.Linear(200, 200)
+        self.fc3 = nn.Linear(200, 85)
 
     def forward(self, x):
-        return torch.sigmoid(self.linear(x))
+        x = F.relu(self.fc1(x))
+        x = F.relu(self.fc2(x))
+        x = self.fc3(x)
+        return x
 
-
-model = LogisticRegression(n_features)
+model = Net()
 
 # 2) loss and optimizer
 criterion = nn.BCELoss()
