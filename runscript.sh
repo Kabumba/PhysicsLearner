@@ -2,7 +2,7 @@
 #SBATCH -C cgpu01
 #SBATCH -c 20
 #SBATCH --mem=60G
-#SBATCH --gres=gpu:2
+#SBATCH --gres=gpu:1
 #SBATCH --partition=short
 #SBATCH --time=02:00:00
 #SBATCH --job-name=test
