@@ -6,7 +6,7 @@
 #SBATCH --partition=short
 #SBATCH --time=00:05:00
 #SBATCH --job-name=hallo
-#SBATCH --output=/work/smfrrohk/Masterarbeit/hallo.log
+#SBATCH --output=/work/smfrrohk/Masterarbeit/logs/hallo.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
 #-------------------------------------
@@ -19,4 +19,4 @@ source /home/smfrrohk/anaconda3/bin/activate
 conda activate PhysicsLearner
 
 cd /work/smfrrohk/Masterarbeit/PhysicsLearner
-srun python -m main.py
+srun python main.py
