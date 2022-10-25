@@ -38,8 +38,14 @@ print(out)
     - update weights
 """
 
+# device config
+device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 
-
+# hyperparameters
+hidden_size = 200
+num_epochs = 2
+batch_size = 100
+learning_rate = 0.001
 
 # 0) prepare data
 bc = datasets.load_breast_cancer()
@@ -77,13 +83,11 @@ class LogisticRegression(nn.Module):
 model = LogisticRegression(n_features)
 
 # 2) loss and optimizer
-learning_rate = 0.005
 criterion = nn.BCELoss()
 optimizer = torch.optim.SGD(model.parameters(), lr=learning_rate)
 
 # 3) training loop
-n_epochs = 200
-for epoch in range(n_epochs):
+for epoch in range(num_epochs):
     # forward pass and loss
     y_predicted = model(X_train)
     loss = criterion(y_predicted, y_train)
@@ -97,7 +101,7 @@ for epoch in range(n_epochs):
     # zero gradients
     optimizer.zero_grad()
 
-    if (epoch+1) % (n_epochs / 10) == 0:
+    if (epoch+1) % (num_epochs / 10) == 0:
         print(f'epoch: {epoch + 1}, loss = {loss.item():.4f}')
 
 # 4) evaluation
