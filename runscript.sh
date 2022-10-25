@@ -1,7 +1,7 @@
 #!/bin/bash -l
 #SBATCH -C cgpu02
 #SBATCH -c 20
-#SBATCH --mem=60G
+#SBATCH --mem=6G
 #SBATCH --gres=gpu:1
 #SBATCH --partition=short
 #SBATCH --time=00:00:20
