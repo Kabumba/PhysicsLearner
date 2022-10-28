@@ -2,7 +2,7 @@
 #SBATCH --nodes=1
 #SBATCH --constraint=gpu
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=100
+#SBATCH --mem=2G
 #SBATCH --gres=gpu:1
 #SBATCH --partition=short
 #SBATCH --time=00:15:00
