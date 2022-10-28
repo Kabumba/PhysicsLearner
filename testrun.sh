@@ -1,7 +1,8 @@
 #!/bin/bash -l
-#SBATCH -C cgpu01
-#SBATCH -c 1
-#SBATCH --mem=1G
+#SBATCH --nodes=1
+#SBATCH --constraint=gpu
+#SBATCH --cpus per task=1
+#SBATCH --mem=100
 #SBATCH --gres=gpu:1
 #SBATCH --partition=short
 #SBATCH --time=00:00:20
