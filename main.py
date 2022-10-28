@@ -6,6 +6,7 @@ import torch
 
 def print_hi(name):
     # Use a breakpoint in the code line below to debug your script.
+    print("Started")
     print(f'Hi, {name}. Cuda_available? {torch.cuda.is_available()}')  # Press Strg+F8 to toggle the breakpoint.
 
 
