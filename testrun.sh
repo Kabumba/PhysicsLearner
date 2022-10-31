@@ -15,7 +15,7 @@
 module purge
 module load nvidia/cuda/11.1.1
 
-source /home/smfrrohk/anaconda3/bin
+source /home/smfrrohk/anaconda3/bin/activate
 conda activate PhysicsLearner
 
 cd /work/smfrrohk/Masterarbeit/PhysicsLearner
