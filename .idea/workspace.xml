@@ -2,9 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="runscripts">
+      <change afterPath="$PROJECT_DIR$/logger.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/mirror_data.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runscript.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runscript.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/testrun.sh" beforeDir="false" afterPath="$PROJECT_DIR$/testrun.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/IO_manager.py" beforeDir="false" afterPath="$PROJECT_DIR$/IO_manager.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -150,7 +152,8 @@
       <workItem from="1666944190498" duration="4903000" />
       <workItem from="1667030514640" duration="1197000" />
       <workItem from="1667120577912" duration="597000" />
-      <workItem from="1667215477576" duration="1062000" />
+      <workItem from="1667215477576" duration="2372000" />
+      <workItem from="1667298289787" duration="16465000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -278,7 +281,14 @@
       <option name="project" value="LOCAL" />
       <updated>1666953368077</updated>
     </task>
-    <option name="localTasksCounter" value="19" />
+    <task id="LOCAL-00019" summary="runscripts">
+      <created>1667220181759</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1667220181759</updated>
+    </task>
+    <option name="localTasksCounter" value="20" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
