@@ -1,17 +1,12 @@
-# This is a sample Python script.
+import argparse
 
-# Press Umschalt+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
-import torch
+from configuration import Configuration
+from logger import log
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print("Started")
-    print(f'Hi, {name}. Cuda_available? {torch.cuda.is_available()}')  # Press Strg+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
 if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+    parser = argparse.ArgumentParser(description='Start or continue training with configurations')
+    parser.add_argument('-n', '--name', help='Name of the experiment. Directory with this name should contain a '
+                                             'configuration.yaml file where the hyperparameters for training are stored')
+    args = parser.parse_args()
+    configuration = Configuration(args.name)
+    log("Done!")

@@ -13,8 +13,8 @@ from logger import log
 class ObservationTransformer:
     def __init__(self, ball_in: bool = True, ball_out: bool = True, num_car_in: int = 2, num_car_out: int = 2,
                  mirror: bool = True, invert: bool = True, mirror_and_invert: bool = True):
-        self.num_car_in = math.max(0, math.min(2, num_car_in))
-        self.num_car_out = math.max(0, math.min(2, num_car_out))
+        self.num_car_in = max(0, min(2, num_car_in))
+        self.num_car_out = max(0, min(2, num_car_out))
         self.mirror_and_invert = mirror_and_invert
         self.invert = invert
         self.mirror = mirror
@@ -38,7 +38,7 @@ class ObservationTransformer:
             factor += 1
         if self.mirror_and_invert:
             factor += 1
-        if self.car1_in or self.car2_in or self.car1_out or self.car2_out:
+        if self.num_car_in > 0 or self.num_car_out > 0:
             factor *= 2
         return factor
 
@@ -49,7 +49,7 @@ class ObservationTransformer:
         y_new = torch.zeros(self.out_size)
         fci = 0  # first car index
         swap_cars = False
-        if self.car1_in or self.car2_in or self.car1_out or self.car2_out:
+        if self.num_car_in > 0 or self.num_car_out > 0:
             swap_cars = mode >= self.n_factor / 2
             if swap_cars:
                 mode -= self.n_factor / 2
