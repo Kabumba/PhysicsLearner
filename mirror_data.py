@@ -91,7 +91,6 @@ def invert_state(obs):
     ])
     inverted_obs[:85] = obs[:85] * coefs[:85]
     inverted_obs[85:] = obs[85:] * coefs[85:obs.shape[0]]
-    inverted_obs[9:35] = obs[34:8:-1]
     return inverted_obs
 
 

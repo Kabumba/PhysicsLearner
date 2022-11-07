@@ -11,7 +11,7 @@ class Metrics:
             self.bo = 0
 
     def ball_pos_loss(self, y_pred, y_true):
-        return torch.mean(torch.cdist(y_pred[:, 3], y_true[:, :3]))
+        return torch.mean(torch.cdist(y_pred[:, 0:3], y_true[:, 0:3]))
 
     def ball_lin_vel_loss(self, y_pred, y_true):
         return torch.mean(torch.cdist(y_pred[:, 3:6], y_true[:, 3:6]))
@@ -35,34 +35,34 @@ class Metrics:
         return torch.mean(torch.cdist(y_pred[:, self.bo + 12:self.bo + 15], y_true[:, self.bo + 12:self.bo + 15]))
 
     def car_on_ground_acc(self, y_pred, y_true):
-        og_pred = torch.gt(y_pred[:, self.bo + 16], 0.5)
-        og_true = torch.gt(y_true[:, self.bo + 16], 0.5)
+        og_pred = torch.gt(y_pred[:, self.bo + 16], 0.0).type(torch.float32)
+        og_true = torch.gt(y_true[:, self.bo + 16], 0.0).type(torch.float32)
         og_diff = torch.abs(og_true - og_pred)
-        return torch.mean(og_diff)
+        return torch.mean(1-og_diff)
 
     def car_ball_touch_acc(self, y_pred, y_true):
-        og_pred = torch.gt(y_pred[:, self.bo + 17], 0.5)
-        og_true = torch.gt(y_true[:, self.bo + 17], 0.5)
+        og_pred = torch.gt(y_pred[:, self.bo + 17], 0.0).type(torch.float32)
+        og_true = torch.gt(y_true[:, self.bo + 17], 0.0).type(torch.float32)
         og_diff = torch.abs(og_true - og_pred)
-        return torch.mean(og_diff)
+        return torch.mean(1-og_diff)
 
     def car_has_jump_acc(self, y_pred, y_true):
-        og_pred = torch.gt(y_pred[:, self.bo + 18], 0.5)
-        og_true = torch.gt(y_true[:, self.bo + 18], 0.5)
+        og_pred = torch.gt(y_pred[:, self.bo + 18], 0.0).type(torch.float32)
+        og_true = torch.gt(y_true[:, self.bo + 18], 0.0).type(torch.float32)
         og_diff = torch.abs(og_true - og_pred)
-        return torch.mean(og_diff)
+        return torch.mean(1-og_diff)
 
     def car_has_flip_acc(self, y_pred, y_true):
-        og_pred = torch.gt(y_pred[:, self.bo + 19], 0.5)
-        og_true = torch.gt(y_true[:, self.bo + 19], 0.5)
+        og_pred = torch.gt(y_pred[:, self.bo + 19], 0.0).type(torch.float32)
+        og_true = torch.gt(y_true[:, self.bo + 19], 0.0).type(torch.float32)
         og_diff = torch.abs(og_true - og_pred)
-        return torch.mean(og_diff)
+        return torch.mean(1-og_diff)
 
     def car_is_demo_acc(self, y_pred, y_true):
-        og_pred = torch.gt(y_pred[:, self.bo + 20], 0.5)
-        og_true = torch.gt(y_true[:, self.bo + 20], 0.5)
+        og_pred = torch.gt(y_pred[:, self.bo + 20], 0.0).type(torch.float32)
+        og_true = torch.gt(y_true[:, self.bo + 20], 0.0).type(torch.float32)
         og_diff = torch.abs(og_true - og_pred)
-        return torch.mean(og_diff)
+        return torch.mean(1-og_diff)
 
 
 def rot_matrix_from_forward_up(forward, up):

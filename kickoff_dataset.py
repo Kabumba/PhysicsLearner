@@ -88,23 +88,23 @@ class ObservationTransformer:
             if swap_cars:
                 x_new[fci:fci + 15] = x[47:62]
                 # skip over boost-amount
-                x_new[fci + 15:] = x[63:68]
+                x_new[fci + 15:fci + 20] = x[63:68]
                 # leave out time related data
             else:
                 x_new[fci:fci + 15] = x[9:24]
                 # skip over boost-amount
-                x_new[fci + 15:] = x[25:30]
+                x_new[fci + 15:fci + 20] = x[25:30]
                 # leave out time related data
         if self.num_car_out == 2:
             if swap_cars:
                 x_new[fci + 20:fci + 35] = x[9:24]
                 # skip over boost-amount
-                x_new[fci + 35:] = x[25:30]
+                x_new[fci + 35:fci + 40] = x[25:30]
                 # leave out time related data
             else:
                 x_new[fci + 20:fci + 35] = x[47:62]
                 # skip over boost-amount
-                x_new[fci + 35:] = x[63:68]
+                x_new[fci + 35:fci + 40] = x[63:68]
                 # leave out time related data
 
         return x_new, y_new
@@ -125,7 +125,7 @@ class KickoffDataset(Dataset):
     def __getitem__(self, index):
         i = math.floor(index / self.n_factor)
         x = self.game_states[i]
-        y = self.game_states[i + self.n_factor][:85]
+        y = self.game_states[i + 1][:85]
         sample = x, y
         if self.transform:
             mode = index % self.n_factor
@@ -144,8 +144,7 @@ class KickoffEnsemble(Dataset):
                                                 mirror=config.mirror, invert=config.invert,
                                                 mirror_and_invert=config.mirror_and_invert)
         log("Loading Data into RAM...")
-        self.kickoffs = np.array([KickoffDataset((config.train_path + "/" + file), self.transform) for file in
-                                  os.listdir(data_dir)])
+        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.transform) for file in os.listdir(data_dir)]
         self.n_samples = np.sum(np.array([k.n_samples for k in self.kickoffs]))
         self.indices = np.zeros((len(self.kickoffs),))
         self.indices[0] = self.kickoffs[0].n_samples
@@ -164,11 +163,10 @@ class KickoffEnsemble(Dataset):
         if start == end:
             return start
         mid = int(start + (end - start) / 2)
-        if value > self.indices[mid]:
-            return self.binary_search(mid, end, value)
+        if value >= self.indices[mid]:
+            return self.binary_search(mid + 1, end, value)
         if value < self.indices[mid]:
             return self.binary_search(start, mid, value)
-        return mid
 
     def __len__(self):
         return self.n_samples
