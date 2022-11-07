@@ -7,12 +7,13 @@ from torch.utils.data import Dataset
 
 import IO_manager
 import mirror_data
+from configuration import Configuration
 from logger import log
 
 
 class ObservationTransformer:
     def __init__(self, ball_in: bool = True, ball_out: bool = True, num_car_in: int = 2, num_car_out: int = 2,
-                 mirror: bool = True, invert: bool = True, mirror_and_invert: bool = True):
+                 mirror: bool = True, invert: bool = True, mirror_and_invert: bool = True, ):
         self.num_car_in = max(0, min(2, num_car_in))
         self.num_car_out = max(0, min(2, num_car_out))
         self.mirror_and_invert = mirror_and_invert
@@ -136,10 +137,14 @@ class KickoffDataset(Dataset):
 
 
 class KickoffEnsemble(Dataset):
-    def __init__(self, data_dir, transform: ObservationTransformer = None):
-        self.transform = transform
+    def __init__(self, data_dir, config: Configuration):
+        self.config = config
+        self.transform = ObservationTransformer(ball_in=config.ball_in, ball_out=config.ball_out,
+                                                num_car_out=config.num_car_out, num_car_in=config.num_car_in,
+                                                mirror=config.mirror, invert=config.invert,
+                                                mirror_and_invert=config.mirror_and_invert)
         log("Loading Data into RAM...")
-        self.kickoffs = np.array([KickoffDataset((data_dir + "/" + file), self.transform) for file in
+        self.kickoffs = np.array([KickoffDataset((config.train_path + "/" + file), self.transform) for file in
                                   os.listdir(data_dir)])
         self.n_samples = np.sum(np.array([k.n_samples for k in self.kickoffs]))
         self.indices = np.zeros((len(self.kickoffs),))

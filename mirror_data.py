@@ -49,11 +49,11 @@ def mirror_state(obs):
 
 
 def invert_state(obs):
-    '''
+    """
     Punktspiegelung (vertauschen von teams)
-    :param game_state_sequence:
+    :param obs:
     :return:
-    '''
+    """
     inverted_obs = torch.zeros(obs.shape)
     # ball
     coefs = np.array([
@@ -97,7 +97,7 @@ def invert_state(obs):
 
 def invert_and_mirror_state(obs):
     """
-    Spiegelung an der Mittelinie
+    Spiegelung an der Mittellinie
     :param obs:
     :return:
     """
