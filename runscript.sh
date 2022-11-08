@@ -1,12 +1,12 @@
 #!/bin/bash -l
 #SBATCH --nodes=1
 #SBATCH --constraint=gpu
-#SBATCH --cpus-per-task 20
+#SBATCH --cpus-per-task=20
 #SBATCH --mem=60G
 #SBATCH --gres=gpu:1
 #SBATCH --partition=short
 #SBATCH --time=02:00:00
-#SBATCH --job-name=test
+#SBATCH --job-name=Test
 #SBATCH --output=/work/smfrrohk/Masterarbeit/Experimente/%x/run-%j.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
