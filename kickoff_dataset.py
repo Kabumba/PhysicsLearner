@@ -1,5 +1,6 @@
 import math
 import os
+import sys
 
 import numpy as np
 import torch
@@ -86,25 +87,25 @@ class ObservationTransformer:
             y_new[:9] = y[:9]
         if self.num_car_out >= 1:
             if swap_cars:
-                x_new[fci:fci + 15] = x[47:62]
+                y_new[fci:fci + 15] = y[47:62]
                 # skip over boost-amount
-                x_new[fci + 15:fci + 20] = x[63:68]
+                y_new[fci + 15:fci + 20] = y[63:68]
                 # leave out time related data
             else:
-                x_new[fci:fci + 15] = x[9:24]
+                y_new[fci:fci + 15] = y[9:24]
                 # skip over boost-amount
-                x_new[fci + 15:fci + 20] = x[25:30]
+                y_new[fci + 15:fci + 20] = y[25:30]
                 # leave out time related data
         if self.num_car_out == 2:
             if swap_cars:
-                x_new[fci + 20:fci + 35] = x[9:24]
+                y_new[fci + 20:fci + 35] = y[9:24]
                 # skip over boost-amount
-                x_new[fci + 35:fci + 40] = x[25:30]
+                y_new[fci + 35:fci + 40] = y[25:30]
                 # leave out time related data
             else:
-                x_new[fci + 20:fci + 35] = x[47:62]
+                y_new[fci + 20:fci + 35] = y[47:62]
                 # skip over boost-amount
-                x_new[fci + 35:fci + 40] = x[63:68]
+                y_new[fci + 35:fci + 40] = y[63:68]
                 # leave out time related data
 
         return x_new, y_new
@@ -114,7 +115,8 @@ class KickoffDataset(Dataset):
 
     def __init__(self, data_file, transform: ObservationTransformer = None):
         # data loading
-        self.game_states = torch.load(data_file)
+        self.game_states = torch.load(data_file, map_location=lambda storage, loc: storage.cuda(0))
+        # log(f'self.game_states {self.game_states.device}')
         self.transform = transform
         self.n_samples = self.game_states.shape[0] - 1
         self.n_factor = 1
@@ -130,6 +132,7 @@ class KickoffDataset(Dataset):
         if self.transform:
             mode = index % self.n_factor
             sample = self.transform(sample, mode)
+        # log(f'sample {(sample[0].device, sample[1].device)}')
         return sample
 
     def __len__(self):

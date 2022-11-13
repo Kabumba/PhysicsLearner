@@ -21,7 +21,7 @@ class Configuration:
         self.num_hidden_layers = 2
         self.num_epoch = 3
         self.epochs_per_checkpoint = 1
-        self.iterations_per_log = 1000
+        self.steps_per_log = 1000
         self.num_car_in = 2
         self.num_car_out = 2
         self.in_size = 0

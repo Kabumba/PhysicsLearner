@@ -49,6 +49,10 @@ def start_training(config):
     writer = SummaryWriter(config.tensorboard_path)
     # device config
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    if torch.cuda.is_available():
+        torch.set_default_tensor_type("torch.cuda.FloatTensor")
+    else:
+        torch.set_default_tensor_type("torch.FloatTensor")
     log(f'Device: {device}')
 
     # 0) prepare data
@@ -62,8 +66,7 @@ def start_training(config):
     test_loader = DataLoader(dataset=test_dataset, batch_size=n_test_samples, num_workers=0, pin_memory=True)
     """
 
-    train_loader = DataLoader(dataset=train_dataset, batch_size=config.batch_size, shuffle=True, num_workers=0,
-                              pin_memory=True, drop_last=True)
+
     n_iterations = math.ceil(n_training_samples / config.batch_size)
 
     # 1) setup model and optimizer
@@ -84,19 +87,42 @@ def start_training(config):
             optimizer.load_state_dict(loaded_checkpoint["optim_state"])
     model.to(device)
 
+    free_mem, total_mem = torch.cuda.mem_get_info()
+    batch_size = free_mem / (32*config.in_size)
+    train_loader = DataLoader(dataset=train_dataset,
+                              batch_size=batch_size,
+                              shuffle=True,
+                              num_workers=0,
+                              generator=torch.Generator(device=device))
+    log(f"Total Memory: {total_mem}, Free Memory: {free_mem} Batch Size: {batch_size}")
+
+    t = torch.cuda.get_device_properties(0).total_memory
+    r = torch.cuda.memory_reserved(0)
+    a = torch.cuda.memory_allocated(0)
+    f = r - a  # free inside reserved
+    print(f'Cuda Memory: total: {t} reserved: {r} allocated: {a} free: {f}')
+    log(torch.cuda.mem_get_info())
+
     # 2) loss
     criterion = nn.MSELoss()
 
     # 3) training loop
     epochs_since_last_checkpoint = 0
     iteration = 0
+    steps = 0
+    steps_last_log = 0
+    iterations_last_log = 0
     for epoch in range(start_epoch, config.num_epoch):
         running_loss = 0.0
-        for i, data in enumerate(train_loader):
+        # log(f'Epoch {epoch}')
+        for i, (x_train, y_train) in enumerate(train_loader):
+            t = torch.cuda.get_device_properties(0).total_memory
+            r = torch.cuda.memory_reserved(0)
+            a = torch.cuda.memory_allocated(0)
+            f = r - a  # free inside reserved
+            print(f'Cuda Memory: total: {t} reserved: {r} allocated: {a} free: {f}')
+            log(torch.cuda.mem_get_info())
             # forward pass and loss
-            x_train, y_train = data
-            x_train = x_train.to(device)
-            y_train = y_train.to(device)
 
             y_predicted = model(x_train)
             loss = criterion(y_predicted, y_train)
@@ -111,12 +137,18 @@ def start_training(config):
             # updates
             optimizer.step()
 
-            if iteration % config.iterations_per_log == 0:
-                log(f'epoch: {epoch + 1}, iteration: {iteration}, loss = {running_loss / config.batch_size:.10f}')
-                writer.add_scalar('training loss', running_loss / config.batch_size, iteration * config.batch_size)
+            steps += x_train.shape[0]
+            steps_last_log += x_train.shape[0]
+            iterations_last_log += 1
+
+            if steps_last_log >= config.steps_per_log:
+                log(f'epoch: {epoch + 1}, step: {steps}, loss = {running_loss / iterations_last_log:.10f}')
+                writer.add_scalar('training loss', running_loss / iterations_last_log, steps)
                 running_loss = 0.0
-                with torch.no_grad():
-                    tensor_log(config, writer, y_predicted, y_train, iteration * config.batch_size)
+                steps_last_log = 0
+                iterations_last_log = 0
+                """with torch.no_grad():
+                    tensor_log(config, writer, y_predicted, y_train, steps)"""
 
             iteration += 1
 
@@ -130,7 +162,7 @@ def start_training(config):
                 "model_state": model.state_dict(),
                 "optim_state": optimizer.state_dict()
             }
-            file_name = "cp_" + str(iteration) + ".pth"
+            file_name = "cp_" + str(steps) + ".pth"
             torch.save(checkpoint, os.path.join(config.checkpoint_path, file_name))
             log(f'iteration: {iteration}, saved checkpoint as {file_name}')
 

@@ -8,7 +8,7 @@ def mirror_state(obs):
     :param obs:
     :return:
     """
-    mirrored_obs = torch.zeros(obs.shape)
+    mirrored_obs = torch.zeros(obs.shape).to(obs.device)
     # ball
     coefs = torch.tensor([
         # ball
@@ -42,7 +42,7 @@ def mirror_state(obs):
         # inputs
         1, -1, 1, -1, -1, 1, 1, 1,  # car1
         1, -1, 1, -1, -1, 1, 1, 1  # car2
-    ])
+    ]).to(obs.device)
     mirrored_obs[:85] = obs[:85] * coefs[:85]
     mirrored_obs[85:] = obs[85:] * coefs[85:obs.shape[0]]
     return mirrored_obs
@@ -54,9 +54,9 @@ def invert_state(obs):
     :param obs:
     :return:
     """
-    inverted_obs = torch.zeros(obs.shape)
+    inverted_obs = torch.zeros(obs.shape).to(obs.device)
     # ball
-    coefs = np.array([
+    coefs = torch.tensor([
         # ball
         -1, -1, 1,  # pos
         -1, -1, 1,  # vel
@@ -88,7 +88,7 @@ def invert_state(obs):
         # inputs
         1, 1, 1, 1, 1, 1, 1, 1,  # car1
         1, 1, 1, 1, 1, 1, 1, 1  # car2
-    ])
+    ]).to(obs.device)
     inverted_obs[:85] = obs[:85] * coefs[:85]
     inverted_obs[85:] = obs[85:] * coefs[85:obs.shape[0]]
     return inverted_obs

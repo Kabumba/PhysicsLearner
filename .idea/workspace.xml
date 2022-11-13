@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="bugfixes, training läuft TODO: checkpoint loading fixen (cuda/cpu), model verbessern">
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="runscript">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runscript.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runscript.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mirror_data.py" beforeDir="false" afterPath="$PROJECT_DIR$/mirror_data.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -91,9 +95,6 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -208,7 +209,9 @@
       <workItem from="1667638692675" duration="596000" />
       <workItem from="1667729586069" duration="1788000" />
       <workItem from="1667809562156" duration="38746000" />
-      <workItem from="1667894962031" duration="338000" />
+      <workItem from="1667894962031" duration="9718000" />
+      <workItem from="1668084967357" duration="598000" />
+      <workItem from="1668324097295" duration="13748000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -357,7 +360,14 @@
       <option name="project" value="LOCAL" />
       <updated>1667863419159</updated>
     </task>
-    <option name="localTasksCounter" value="22" />
+    <task id="LOCAL-00022" summary="runscript">
+      <created>1667895309341</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1667895309341</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -380,11 +390,11 @@
     <MESSAGE value="test runscript" />
     <MESSAGE value="test runscript megashort" />
     <MESSAGE value="dataset an neues format angepasst" />
-    <MESSAGE value="runscript" />
     <MESSAGE value="runscripts" />
     <MESSAGE value="training implemented, not tested yet" />
     <MESSAGE value="bugfixes, training läuft TODO: checkpoint loading fixen (cuda/cpu), model verbessern" />
-    <option name="LAST_COMMIT_MESSAGE" value="bugfixes, training läuft TODO: checkpoint loading fixen (cuda/cpu), model verbessern" />
+    <MESSAGE value="runscript" />
+    <option name="LAST_COMMIT_MESSAGE" value="runscript" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1666079568489" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
