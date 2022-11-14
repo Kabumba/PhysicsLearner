@@ -115,7 +115,7 @@ class KickoffDataset(Dataset):
 
     def __init__(self, data_file, transform: ObservationTransformer = None):
         # data loading
-        self.game_states = torch.load(data_file, map_location=lambda storage, loc: storage.cuda(0))
+        self.game_states = torch.load(data_file)  # , map_location=lambda storage, loc: storage.cuda(0))
         # log(f'self.game_states {self.game_states.device}')
         self.transform = transform
         self.n_samples = self.game_states.shape[0] - 1
@@ -148,6 +148,7 @@ class KickoffEnsemble(Dataset):
                                                 mirror_and_invert=config.mirror_and_invert)
         log("Loading Data into RAM...")
         self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.transform) for file in os.listdir(data_dir)]
+        log(f"Data Device: {self.kickoffs[0].game_states.device}")
         self.n_samples = np.sum(np.array([k.n_samples for k in self.kickoffs]))
         self.indices = np.zeros((len(self.kickoffs),))
         self.indices[0] = self.kickoffs[0].n_samples

@@ -7,7 +7,7 @@
 #SBATCH --partition=short
 #SBATCH --time=02:00:00
 #SBATCH --job-name=Test
-#SBATCH --output=/work/smfrrohk/Masterarbeit/Experimente/%x/run-%j.log
+#SBATCH --output=/work/smfrrohk/Masterarbeit/Experimente/%x/Logs/run-%j.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
 #-------------------------------------

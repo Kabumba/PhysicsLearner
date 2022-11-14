@@ -1,19 +1,12 @@
-import math
 import os.path
 
 import torch
-import numpy as np
 import torch.nn as nn
 import torch.nn.functional as F
+from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
-from sklearn import datasets
-import matplotlib.pyplot as plt
-from sklearn.preprocessing import StandardScaler
-from sklearn.model_selection import train_test_split
-from torch.utils.data import DataLoader
-
-from kickoff_dataset import KickoffDataset, KickoffEnsemble
+from kickoff_dataset import KickoffEnsemble
 from logger import log
 from metrics import Metrics
 
@@ -44,84 +37,85 @@ class Model(nn.Module):
 
 
 def start_training(config):
+    # setup directories
     if not os.path.exists(config.tensorboard_path):
         os.mkdir(config.tensorboard_path)
-    writer = SummaryWriter(config.tensorboard_path)
+    if not os.path.exists(config.log_path):
+        os.mkdir(config.log_path)
+    parts = os.listdir(config.tensorboard_path)
+    current_part = len(parts)
+    tensorboard_path = os.path.join(config.tensorboard_path, "part" + str(current_part))
+    if not os.path.exists(tensorboard_path):
+        os.mkdir(tensorboard_path)
+    writer = SummaryWriter(tensorboard_path)
+
     # device config
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    if torch.cuda.is_available():
+    """if torch.cuda.is_available():
         torch.set_default_tensor_type("torch.cuda.FloatTensor")
     else:
-        torch.set_default_tensor_type("torch.FloatTensor")
+        torch.set_default_tensor_type("torch.FloatTensor")"""
     log(f'Device: {device}')
 
     # 0) prepare data
     log("Training Data")
     train_dataset = KickoffEnsemble(config.train_path, config)
-    n_training_samples = len(train_dataset)
-    """
-    log("Test Data")
-    test_dataset = KickoffEnsemble(config.test_path, config)
-    n_test_samples = len(test_dataset)
-    test_loader = DataLoader(dataset=test_dataset, batch_size=n_test_samples, num_workers=0, pin_memory=True)
-    """
-
-
-    n_iterations = math.ceil(n_training_samples / config.batch_size)
 
     # 1) setup model and optimizer
     start_epoch = 0
+    steps = 0
     model = Model(config)
-    log(model)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+
+    # load checkpoint
     if not os.path.exists(config.checkpoint_path):
         os.mkdir(config.checkpoint_path)
     else:
         checkpoints = os.listdir(config.checkpoint_path)
+        paths = [os.path.join(config.checkpoint_path, basename) for basename in checkpoints]
         if len(checkpoints) > 0:
-            log("Found existing model with that name, continue from latest checkpoint")
-            loaded_checkpoint = torch.load(os.path.join(config.checkpoint_path, checkpoints[len(checkpoints)-1]), map_location="cuda:0")
+            cp_file = max(paths, key=os.path.getctime)
+            log(f"Found existing model with that name, continue from latest checkpoint {cp_file}")
+            loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
             start_epoch = loaded_checkpoint["epoch"]
+            steps = loaded_checkpoint["step"]
             device = loaded_checkpoint["device"]
             model.load_state_dict(loaded_checkpoint["model_state"])
             optimizer.load_state_dict(loaded_checkpoint["optim_state"])
     model.to(device)
+    log(model)
 
+    # setup DataLoader
     free_mem, total_mem = torch.cuda.mem_get_info()
-    batch_size = free_mem / (32*config.in_size)
+    mem_buffer = 1050000000
+    # batch_size = math.floor((free_mem - mem_buffer) / (32 * config.in_size))
+    batch_size = config.batch_size
     train_loader = DataLoader(dataset=train_dataset,
                               batch_size=batch_size,
                               shuffle=True,
-                              num_workers=0,
-                              generator=torch.Generator(device=device))
-    log(f"Total Memory: {total_mem}, Free Memory: {free_mem} Batch Size: {batch_size}")
-
-    t = torch.cuda.get_device_properties(0).total_memory
-    r = torch.cuda.memory_reserved(0)
-    a = torch.cuda.memory_allocated(0)
-    f = r - a  # free inside reserved
-    print(f'Cuda Memory: total: {t} reserved: {r} allocated: {a} free: {f}')
-    log(torch.cuda.mem_get_info())
+                              num_workers=config.num_workers,
+                              pin_memory=config.pin_memory,
+                              # generator=torch.Generator(device=device)
+                              )
+    log(f"Total Memory: {total_mem}B, Free Memory: {free_mem}B, Batch Size: {batch_size}, Worker: {config.num_workers}")
 
     # 2) loss
     criterion = nn.MSELoss()
 
     # 3) training loop
-    epochs_since_last_checkpoint = 0
-    iteration = 0
-    steps = 0
     steps_last_log = 0
+    steps_last_checkpoint = 0
+    last_loss = 0
     iterations_last_log = 0
-    for epoch in range(start_epoch, config.num_epoch):
-        running_loss = 0.0
+    running_loss = 0.0
+    first_log = True
+    writer.add_scalar('training loss', 1, 0)
+    for epoch in range(start_epoch, 50):
         # log(f'Epoch {epoch}')
+        if steps >= config.max_steps:
+            break
         for i, (x_train, y_train) in enumerate(train_loader):
-            t = torch.cuda.get_device_properties(0).total_memory
-            r = torch.cuda.memory_reserved(0)
-            a = torch.cuda.memory_allocated(0)
-            f = r - a  # free inside reserved
-            print(f'Cuda Memory: total: {t} reserved: {r} allocated: {a} free: {f}')
-            log(torch.cuda.mem_get_info())
+            x_train, y_train = x_train.to(device), y_train.to(device)
             # forward pass and loss
 
             y_predicted = model(x_train)
@@ -136,35 +130,46 @@ def start_training(config):
 
             # updates
             optimizer.step()
+            del y_train
 
             steps += x_train.shape[0]
             steps_last_log += x_train.shape[0]
+            steps_last_checkpoint += x_train.shape[0]
             iterations_last_log += 1
 
+            del x_train
+
             if steps_last_log >= config.steps_per_log:
-                log(f'epoch: {epoch + 1}, step: {steps}, loss = {running_loss / iterations_last_log:.10f}')
-                writer.add_scalar('training loss', running_loss / iterations_last_log, steps)
+                logged_loss = running_loss / iterations_last_log
+                log(f'epoch: {epoch + 1}, step: {steps}, loss = {logged_loss:.10f}')
+                writer.add_scalar('training loss', logged_loss, steps)
+                if not first_log:
+                    delta_loss = logged_loss - last_loss
+                    writer.add_scalar('delta loss', delta_loss, steps)
+                else:
+                    first_log = False
+                last_loss = logged_loss
                 running_loss = 0.0
                 steps_last_log = 0
                 iterations_last_log = 0
                 """with torch.no_grad():
                     tensor_log(config, writer, y_predicted, y_train, steps)"""
 
-            iteration += 1
-
-        epochs_since_last_checkpoint += 1
-        if epochs_since_last_checkpoint == config.epochs_per_checkpoint:
-            epochs_since_last_checkpoint = 0
-            checkpoint = {
-                "epoch": epoch,
-                "device": device,
-                "iteration": iteration,
-                "model_state": model.state_dict(),
-                "optim_state": optimizer.state_dict()
-            }
-            file_name = "cp_" + str(steps) + ".pth"
-            torch.save(checkpoint, os.path.join(config.checkpoint_path, file_name))
-            log(f'iteration: {iteration}, saved checkpoint as {file_name}')
+            if steps >= config.max_steps or steps_last_checkpoint >= config.steps_per_checkpoint:
+                steps_last_checkpoint = 0
+                checkpoint = {
+                    "epoch": epoch,
+                    "device": device,
+                    "step": steps,
+                    "model_state": model.state_dict(),
+                    "optim_state": optimizer.state_dict()
+                }
+                file_name = "cp_" + str(steps) + ".pth"
+                torch.save(checkpoint, os.path.join(config.checkpoint_path, file_name))
+                log(f'step: {steps}, saved checkpoint as {file_name}')
+            if steps >= config.max_steps:
+                break
+    log(f"Model has trained for {config.max_steps} steps. Run over.")
 
 
 def tensor_log(config, writer, y_pred, y_true, global_step):
