@@ -13,69 +13,54 @@ from logger import log
 
 
 class ObservationTransformer:
-    def __init__(self, ball_in: bool = True, ball_out: bool = True, num_car_in: int = 2, num_car_out: int = 2,
-                 mirror: bool = True, invert: bool = True, mirror_and_invert: bool = True, ):
-        self.num_car_in = max(0, min(2, num_car_in))
-        self.num_car_out = max(0, min(2, num_car_out))
-        self.mirror_and_invert = mirror_and_invert
-        self.invert = invert
-        self.mirror = mirror
-        self.ball_out = ball_out
-        self.ball_in = ball_in
+    def __init__(self, config: Configuration):
+        self.config = config
         self.n_factor = self.n_factor()
-        self.in_size = 0
-        self.out_size = 0
-        if self.ball_in:
-            self.in_size += 9
-        self.in_size += self.num_car_in * 46
-        if self.ball_out:
-            self.out_size += 9
-        self.out_size += self.num_car_out * 20
 
     def n_factor(self):
         factor = 1
-        if self.mirror:
+        if self.config.mirror:
             factor += 1
-        if self.invert:
+        if self.config.invert:
             factor += 1
-        if self.mirror_and_invert:
+        if self.config.mirror_and_invert:
             factor += 1
-        if self.num_car_in > 0 or self.num_car_out > 0:
+        if self.config.num_car_in > 0 or self.config.num_car_out > 0:
             factor *= 2
         return factor
 
     def __call__(self, sample, mode):
         x, y = sample
 
-        x_new = torch.zeros(self.in_size)
-        y_new = torch.zeros(self.out_size)
+        x_new = torch.zeros(self.config.in_size, device=x.device)
+        y_new = torch.zeros(self.config.out_size, device=y.device)
         fci = 0  # first car index
         swap_cars = False
-        if self.num_car_in > 0 or self.num_car_out > 0:
+        if self.config.num_car_in > 0 or self.config.num_car_out > 0:
             swap_cars = mode >= self.n_factor / 2
             if swap_cars:
                 mode -= self.n_factor / 2
         if mode > 0:
-            if self.mirror and mode == 1:
+            if self.config.mirror and mode == 1:
                 x = mirror_data.mirror_state(x)
                 y = mirror_data.mirror_state(y)
-            elif self.mirror_and_invert and mode == (self.n_factor / 2 - 1):
+            elif self.config.mirror_and_invert and mode == (self.n_factor / 2 - 1):
                 x = mirror_data.invert_and_mirror_state(x)
                 y = mirror_data.invert_and_mirror_state(y)
-            elif self.invert:
+            elif self.config.invert:
                 x = mirror_data.invert_state(x)
                 y = mirror_data.invert_state(y)
-        if self.ball_in:
+        if self.config.ball_in:
             x_new[:9] = x[:9]
             fci = 9
-        if self.num_car_in == 1:
+        if self.config.num_car_in == 1:
             if swap_cars:
                 x_new[fci:fci + 38] = x[47:85]
                 x_new[fci + 38:] = x[93:]
             else:
                 x_new[fci:fci + 38] = x[9:47]
                 x_new[fci + 38:] = x[85:93]
-        if self.num_car_in == 2:
+        if self.config.num_car_in == 2:
             if swap_cars:
                 x_new[fci:fci + 38] = x[47:85]
                 x_new[fci + 38:fci + 76] = x[9:47]
@@ -83,9 +68,9 @@ class ObservationTransformer:
                 x_new[fci + 84:] = x[85:93]
             else:
                 x_new[fci:] = x[9:]
-        if self.ball_out:
+        if self.config.ball_out:
             y_new[:9] = y[:9]
-        if self.num_car_out >= 1:
+        if self.config.num_car_out >= 1:
             if swap_cars:
                 y_new[fci:fci + 15] = y[47:62]
                 # skip over boost-amount
@@ -96,7 +81,7 @@ class ObservationTransformer:
                 # skip over boost-amount
                 y_new[fci + 15:fci + 20] = y[25:30]
                 # leave out time related data
-        if self.num_car_out == 2:
+        if self.config.num_car_out == 2:
             if swap_cars:
                 y_new[fci + 20:fci + 35] = y[9:24]
                 # skip over boost-amount
@@ -113,11 +98,12 @@ class ObservationTransformer:
 
 class KickoffDataset(Dataset):
 
-    def __init__(self, data_file, transform: ObservationTransformer = None):
+    def __init__(self, data_file, config: Configuration):
         # data loading
         self.game_states = torch.load(data_file)  # , map_location=lambda storage, loc: storage.cuda(0))
+        normalize(config, self.game_states)
         # log(f'self.game_states {self.game_states.device}')
-        self.transform = transform
+        self.transform = ObservationTransformer(config)
         self.n_samples = self.game_states.shape[0] - 1
         self.n_factor = 1
         if self.transform:
@@ -142,12 +128,8 @@ class KickoffDataset(Dataset):
 class KickoffEnsemble(Dataset):
     def __init__(self, data_dir, config: Configuration):
         self.config = config
-        self.transform = ObservationTransformer(ball_in=config.ball_in, ball_out=config.ball_out,
-                                                num_car_out=config.num_car_out, num_car_in=config.num_car_in,
-                                                mirror=config.mirror, invert=config.invert,
-                                                mirror_and_invert=config.mirror_and_invert)
         log("Loading Data into RAM...")
-        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.transform) for file in os.listdir(data_dir)]
+        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config) for file in os.listdir(data_dir)]
         log(f"Data Device: {self.kickoffs[0].game_states.device}")
         self.n_samples = np.sum(np.array([k.n_samples for k in self.kickoffs]))
         self.indices = np.zeros((len(self.kickoffs),))
@@ -174,3 +156,78 @@ class KickoffEnsemble(Dataset):
 
     def __len__(self):
         return self.n_samples
+
+
+def normalize(config, game_states):
+    coefs = torch.tensor([
+        # ball
+        1 / config.ball_pos_norm_factor,
+        1 / config.ball_pos_norm_factor,
+        1 / config.ball_pos_norm_factor,  # pos
+        1 / config.ball_vel_norm_factor,
+        1 / config.ball_vel_norm_factor,
+        1 / config.ball_vel_norm_factor,  # vel
+        1 / config.ball_ang_vel_norm_factor,
+        1 / config.ball_ang_vel_norm_factor,
+        1 / config.ball_ang_vel_norm_factor,  # ang_vel
+        # car1
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,  # pos
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,  # ang_vel
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  # bools and timings
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward flip
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up flip
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel flip
+        1,  # pitch flip
+        1,  # yaw + roll flip
+        # car2
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,  # pos
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,  # ang_vel
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  # bools and timings
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward flip
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up flip
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel flip
+        1,  # pitch flip
+        1,  # yaw + roll flip
+        # inputs
+        1, 1, 1, 1, 1, 1, 1, 1,  # car1
+        1, 1, 1, 1, 1, 1, 1, 1  # car2
+    ], device=game_states.device)
+    game_states[:, :85] = game_states[:, :85] * coefs[:85]
