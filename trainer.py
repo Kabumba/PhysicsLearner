@@ -65,8 +65,8 @@ def start_training(config):
     start_epoch = 0
     steps = 0
     model = Model(config)
+    model = model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
-    loaded_checkpoint = False
 
     # load checkpoint
     if not os.path.exists(config.checkpoint_path):
@@ -83,8 +83,6 @@ def start_training(config):
             device = loaded_checkpoint["device"]
             model.load_state_dict(loaded_checkpoint["model_state"])
             optimizer.load_state_dict(loaded_checkpoint["optim_state"])
-            loaded_checkpoint = True
-    model.to(device)
     log(model)
 
     # setup DataLoader
@@ -117,8 +115,6 @@ def start_training(config):
     max_epoch = 100000
 
     log(f"-------------- Start Training! --------------")
-    if not loaded_checkpoint:
-        writer.add_scalar('training loss', 1, 0)
     for epoch in range(start_epoch, max_epoch):
         for i, (x_train, y_train) in enumerate(train_loader):
             x_train, y_train = x_train.to(device), y_train.to(device)
@@ -141,6 +137,7 @@ def start_training(config):
 
             steps += x_train.shape[0]
             steps_last_log += x_train.shape[0]
+            steps_last_tensor_log += x_train.shape[0]
             steps_last_checkpoint += x_train.shape[0]
             iterations_last_log += 1
             iterations_last_tensor_log += 1
