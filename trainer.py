@@ -1,11 +1,11 @@
 import os.path
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
+from Independent3 import Independent3
+from Models import *
+from independent1 import Independent
+from independent2 import Independent2
 from kickoff_dataset import KickoffEnsemble
 from logger import log
 from metrics import Metrics
@@ -21,19 +21,8 @@ from metrics import Metrics
 
 
 # 1) model
-class Model(nn.Module):
-    def __init__(self, config):
-        super(Model, self).__init__()
 
-        self.fc1 = nn.Linear(config.in_size, config.hidden_size)
-        self.fc2 = nn.Linear(config.hidden_size, config.hidden_size)
-        self.fc3 = nn.Linear(config.hidden_size, config.out_size)
 
-    def forward(self, x):
-        x = F.relu(self.fc1(x))
-        x = F.relu(self.fc2(x))
-        x = torch.tanh(self.fc3(x))
-        return x
 
 
 def start_training(config):
@@ -64,7 +53,19 @@ def start_training(config):
     # 1) setup model and optimizer
     start_epoch = 0
     steps = 0
-    model = Model(config)
+    model = None
+    if config.model_type == "Naive":
+        model = Naive(config)
+    if config.model_type == "Split":
+        model = Split(config)
+    if config.model_type == "Independent":
+        model = Independent(config)
+    if config.model_type == "Independent2":
+        model = Independent2(config)
+    if config.model_type == "Independent3":
+        model = Independent3(config)
+    if config.model_type is None:
+        raise ValueError(f'{config.model_type} is not a supported model type!')
     model = model.to(device)
     optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
 
@@ -99,19 +100,13 @@ def start_training(config):
                               )
     log(f"Total Memory: {total_mem}B, Free Memory: {free_mem}B, Batch Size: {batch_size}, Worker: {config.num_workers}")
 
-    # 2) loss
-    criterion = nn.MSELoss()
-
     # 3) training loop
     steps_last_log = 0
     steps_last_tensor_log = 0
     steps_last_checkpoint = 0
-    last_loss = 0
     iterations_last_log = 0
     iterations_last_tensor_log = 0
     running_loss = 0.0
-    running_tensor_loss = 0.0
-    first_log = True
     max_epoch = 100000
 
     log(f"-------------- Start Training! --------------")
@@ -121,9 +116,8 @@ def start_training(config):
             # forward pass and loss
 
             y_predicted = model(x_train)
-            loss = criterion(y_predicted, y_train)
+            loss = model.criterion(y_predicted, y_train)
             running_loss += loss.item()
-            running_tensor_loss += loss.item()
 
             # zero gradients
             optimizer.zero_grad()
@@ -133,7 +127,9 @@ def start_training(config):
 
             # updates
             optimizer.step()
+
             del y_train
+            del y_predicted
 
             steps += x_train.shape[0]
             steps_last_log += x_train.shape[0]
@@ -146,19 +142,11 @@ def start_training(config):
 
             # tensorboard logs
             if steps_last_tensor_log >= config.steps_per_tensor_log:
-                logged_loss = running_tensor_loss / iterations_last_tensor_log
-                writer.add_scalar('training loss', logged_loss, steps)
-                if not first_log:
-                    delta_loss = logged_loss - last_loss
-                    writer.add_scalar('delta loss', delta_loss, steps)
-                else:
-                    first_log = False
-                last_loss = logged_loss
-                running_tensor_loss = 0.0
+                model.tensor_log(writer, iterations_last_tensor_log, steps)
                 steps_last_tensor_log = 0
                 iterations_last_tensor_log = 0
-                """with torch.no_grad():
-                    tensor_log(config, writer, y_predicted, y_train, steps)"""
+
+
 
             # printed logs
             if steps_last_log >= config.steps_per_log:
@@ -187,22 +175,3 @@ def start_training(config):
         if steps >= config.max_steps:
             break
     log(f"Model has trained for {config.max_steps} steps. Run over.")
-
-
-def tensor_log(config, writer, y_pred, y_true, global_step):
-    M = Metrics(config)
-    if config.ball_out:
-        writer.add_scalar('ball position loss', M.ball_pos_loss(y_pred, y_true), global_step)
-        writer.add_scalar('ball velocity loss', M.ball_lin_vel_loss(y_pred, y_true), global_step)
-        writer.add_scalar('ball angular velocity loss', M.ball_ang_vel_loss(y_pred, y_true), global_step)
-    if config.num_car_out > 0:
-        writer.add_scalar('car position loss', M.car_pos_loss(y_pred, y_true), global_step)
-        writer.add_scalar('car forward rotation loss', M.car_forward_loss(y_pred, y_true), global_step)
-        writer.add_scalar('car up rotation loss', M.car_up_loss(y_pred, y_true), global_step)
-        writer.add_scalar('car velocity loss', M.car_lin_vel_loss(y_pred, y_true), global_step)
-        writer.add_scalar('car angular velocity loss', M.car_ang_vel_loss(y_pred, y_true), global_step)
-        writer.add_scalar('car on ground accuracy', M.car_on_ground_acc(y_pred, y_true), global_step)
-        writer.add_scalar('car ball touch accuracy', M.car_ball_touch_acc(y_pred, y_true), global_step)
-        writer.add_scalar('car has jump accuracy', M.car_has_jump_acc(y_pred, y_true), global_step)
-        writer.add_scalar('car has flip accuracy', M.car_has_flip_acc(y_pred, y_true), global_step)
-        writer.add_scalar('car is demo accuracy', M.car_is_demo_acc(y_pred, y_true), global_step)
