@@ -71,7 +71,7 @@ class RocketLeagueModel(nn.Module):
         c_is_demo_loss = bce_loss(c_is_demo_pred[:, 0], y_train[:, 28])
 
         loss = self.accumulate_loss(b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss,
-                                    c_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss,
+                                    c_vel_loss, c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss,
                                     c_is_demo_loss)
 
         self.running_loss += loss.item()
@@ -107,7 +107,7 @@ class RocketLeagueModel(nn.Module):
         return loss
 
     def accumulate_loss(self, b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss, c_vel_loss,
-                        c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss, c_is_demo_loss):
+                        c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss, c_is_demo_loss):
         # Overwrite
         pass
 

@@ -1,17 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="fix checkpoint loading">
-      <change afterPath="$PROJECT_DIR$/Independent3.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Models.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/independent1.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/independent2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/independentModel.py" afterDir="false" />
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updates">
+      <change afterPath="$PROJECT_DIR$/naive.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/split.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Independent3.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Models.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/RocketleagueModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -107,7 +103,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--name Independent3" />
+      <option name="PARAMETERS" value="--name NewSplit" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -225,7 +221,7 @@
       <workItem from="1668692538555" duration="13120000" />
       <workItem from="1668757150475" duration="17813000" />
       <workItem from="1668860872570" duration="4552000" />
-      <workItem from="1668928837709" duration="29983000" />
+      <workItem from="1668928837709" duration="33635000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -402,7 +398,14 @@
       <option name="project" value="LOCAL" />
       <updated>1668592104995</updated>
     </task>
-    <option name="localTasksCounter" value="26" />
+    <task id="LOCAL-00026" summary="updates">
+      <created>1668965008803</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1668965008803</updated>
+    </task>
+    <option name="localTasksCounter" value="27" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -432,7 +435,8 @@
     <MESSAGE value="experimente worker batch size" />
     <MESSAGE value="tweaks and polish" />
     <MESSAGE value="fix checkpoint loading" />
-    <option name="LAST_COMMIT_MESSAGE" value="fix checkpoint loading" />
+    <MESSAGE value="updates" />
+    <option name="LAST_COMMIT_MESSAGE" value="updates" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1668415471141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

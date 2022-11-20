@@ -33,7 +33,7 @@ class Independent3(RocketLeagueModel):
         self.fc_cangvel2 = nn.Linear(self.config.hidden_size, self.config.hidden_size)
         self.fc_cangvel3 = nn.Linear(self.config.hidden_size, 3)
 
-        self.fc_bool1 = nn.Linear(config.in_size, self.config.hidden_size)
+        self.fc_cbool1 = nn.Linear(config.in_size, self.config.hidden_size)
         self.fc_conground2 = nn.Linear(self.config.hidden_size, self.config.hidden_size)
         self.fc_conground3 = nn.Linear(self.config.hidden_size, 1)
 
@@ -56,7 +56,7 @@ class Independent3(RocketLeagueModel):
         cpos = F.relu(self.fc_cpos1(x))
         crot = F.relu(self.fc_crot1(x))
         cvel = F.relu(self.fc_cvel1(x))
-        cbool = F.relu(self.fc_cobool1(x))
+        cbool = F.relu(self.fc_cbool1(x))
 
         cforward = F.relu(self.fc_cforward2(crot))
         cup = F.relu(self.fc_cup2(crot))

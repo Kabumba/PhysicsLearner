@@ -1,14 +1,17 @@
 import os.path
+
+import torch
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
-from Independent3 import Independent3
-from Models import *
-from independent1 import Independent
-from independent2 import Independent2
 from kickoff_dataset import KickoffEnsemble
 from logger import log
-from metrics import Metrics
+
+from independent3 import Independent3
+from independent1 import Independent
+from independent2 import Independent2
+from naive import Naive
+from split import Split
 
 """
 1) Design model (input, output size, forward pass)
