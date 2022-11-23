@@ -48,7 +48,7 @@ class RocketLeagueModel(nn.Module):
         # Overwrite
         pass
 
-    def criterion(self, y_predicted, y_train):
+    def criterion(self, y_predicted, y_train, x_train):
         b_pos_pred, b_vel_pred, b_ang_vel_pred, c_pos_pred, c_forward_pred, c_up_pred, c_vel_pred, c_ang_vel_pred, c_on_ground_pred, c_ball_touch_pred, c_has_jump_pred, c_has_flip_pred, c_is_demo_pred = self.format_prediction(
             y_predicted)
         mse_loss = nn.MSELoss()
@@ -64,11 +64,11 @@ class RocketLeagueModel(nn.Module):
         c_vel_loss = mse_loss(c_vel_pred, y_train[:, 18:21])
         c_ang_vel_loss = mse_loss(c_ang_vel_pred, y_train[:, 21:24])
 
-        c_on_ground_loss = bce_loss(c_on_ground_pred[:, 0], y_train[:, 24])
-        c_ball_touch_loss = bce_loss(c_ball_touch_pred[:, 0], y_train[:, 25])
-        c_has_jump_loss = bce_loss(c_has_jump_pred[:, 0], y_train[:, 26])
-        c_has_flip_loss = bce_loss(c_has_flip_pred[:, 0], y_train[:, 27])
-        c_is_demo_loss = bce_loss(c_is_demo_pred[:, 0], y_train[:, 28])
+        c_on_ground_loss = bce_loss(c_on_ground_pred, y_train[:, 24])
+        c_ball_touch_loss = bce_loss(c_ball_touch_pred, y_train[:, 25])
+        c_has_jump_loss = bce_loss(c_has_jump_pred, y_train[:, 26])
+        c_has_flip_loss = bce_loss(c_has_flip_pred, y_train[:, 27])
+        c_is_demo_loss = bce_loss(c_is_demo_pred, y_train[:, 28])
 
         loss = self.accumulate_loss(b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss,
                                     c_vel_loss, c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss,
@@ -94,8 +94,14 @@ class RocketLeagueModel(nn.Module):
         self.running_b_vel_diff += M.euclid(b_vel_pred, y_train[:, 3:6])
         self.running_b_ang_vel_diff += M.euclid(b_ang_vel_pred, y_train[:, 6:9])
         self.running_c_pos_diff += M.euclid(c_pos_pred, y_train[:, 9:12])
-        self.running_c_forward_sim += M.cos_sim(c_forward_pred, y_train[:, 12:15])
-        self.running_c_up_sim += M.cos_sim(c_up_pred, y_train[:, 15:18])
+        if self.config.delta_targets:
+            self.running_c_forward_sim += M.cos_sim(c_forward_pred + x_train[:, 12:15],
+                                                    y_train[:, 12:15] + x_train[:, 12:15])
+            self.running_c_up_sim += M.cos_sim(c_up_pred + x_train[:, 15:18],
+                                               y_train[:, 15:18] + x_train[:, 15:18])
+        else:
+            self.running_c_forward_sim += M.cos_sim(c_forward_pred, y_train[:, 12:15])
+            self.running_c_up_sim += M.cos_sim(c_up_pred, y_train[:, 15:18])
         self.running_c_vel_diff += M.euclid(c_vel_pred, y_train[:, 18:21])
         self.running_c_ang_vel_diff += M.euclid(c_ang_vel_pred, y_train[:, 21:24])
         self.running_c_on_ground_acc += M.acc(c_on_ground_pred, y_train[:, 24])

@@ -94,6 +94,7 @@ class ObservationTransformer:
                 # leave out time related data
             if self.config.delta_targets:
                 y_new[fco:fco + 3] -= x_new[fci:fci+3]
+                y_new[fco+3:fco + 9] -= x_new[fci+3:fci + 9]
                 y_new[fco + 9:fco + 15] -= x_new[fci + 9:fci + 15]
         if self.config.num_car_out == 2:
             if swap_cars:
@@ -108,6 +109,7 @@ class ObservationTransformer:
                 # leave out time related data
             if self.config.delta_targets:
                 y_new[fco + 20:fco + 23] -= x_new[fci + 47:fci + 50]
+                y_new[fco + 23:fco + 29] -= x_new[fci + 50:fci + 56]
                 y_new[fco + 29:fco + 35] -= x_new[fci + 56:fci + 62]
 
         return x_new, y_new

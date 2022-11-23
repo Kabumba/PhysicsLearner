@@ -4,6 +4,7 @@ import torch
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
+from IndependentSplit import IndependentSplit
 from kickoff_dataset import KickoffEnsemble
 from logger import log
 
@@ -67,6 +68,8 @@ def start_training(config):
         model = Independent2(config)
     if config.model_type == "Independent3":
         model = Independent3(config)
+    if config.model_type == "IndependentSplit":
+        model = IndependentSplit(config)
     if config.model_type is None:
         raise ValueError(f'{config.model_type} is not a supported model type!')
     model = model.to(device)
@@ -119,7 +122,7 @@ def start_training(config):
             # forward pass and loss
 
             y_predicted = model(x_train)
-            loss = model.criterion(y_predicted, y_train)
+            loss = model.criterion(y_predicted, y_train, x_train)
             running_loss += loss.item()
 
             # zero gradients

@@ -14,9 +14,9 @@ class Configuration:
         self.model_path = self.result_path + "/model.pth"
         self.configuration_path = self.result_path + "/configuration.yaml"
         self.data_path = self.base_path + "/Data"
-        self.train_path = self.data_path + "/GameStates"
+        self.train_path = self.data_path + "/Train"
         self.test_path = self.data_path + "/Test"
-        self.model_type = "Naive"
+        self.model_type = "Split"
         self.continue_from_checkpoint = True
         self.pin_memory = True
         self.num_workers = 0
@@ -38,6 +38,7 @@ class Configuration:
         self.ball_out = True
         self.ball_in = True
         self.delta_targets = False
+        self.normalize_deltas = False
         self.ball_pos_norm_factor = 6000.0
         self.ball_vel_norm_factor = 6000.0
         self.ball_ang_vel_norm_factor = 6.0
