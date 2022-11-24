@@ -39,6 +39,7 @@ class Configuration:
         self.ball_in = True
         self.delta_targets = False
         self.normalize_deltas = False
+        self.delta_inputs = False
         self.ball_pos_norm_factor = 6000.0
         self.ball_vel_norm_factor = 6000.0
         self.ball_ang_vel_norm_factor = 6.0
@@ -46,6 +47,19 @@ class Configuration:
         self.car_vel_norm_factor = 2300.0
         self.car_ang_norm_factor = 1.0
         self.car_ang_vel_norm_factor = 5.5
+        self.train_ball_pos = True
+        self.train_ball_vel = True
+        self.train_ball_ang_vel = True
+        self.train_car_pos = True
+        self.train_car_forward = True
+        self.train_car_up = True
+        self.train_car_vel = True
+        self.train_car_ang_vel = True
+        self.train_car_on_ground = True
+        self.train_car_ball_touch = True
+        self.train_car_has_jump = True
+        self.train_car_has_flip = True
+        self.train_car_is_demo = True
 
         self.setup()
 
@@ -62,8 +76,10 @@ class Configuration:
         self.num_car_out = max(0, min(2, self.num_car_out))
         if self.ball_in:
             self.in_size += 9
+        if self.num_car_out > 0 and self.ball_out:
+            if self.delta_inputs:
+                self.in_size += 9
         self.in_size += self.num_car_in * 46
         if self.ball_out:
             self.out_size += 9
         self.out_size += self.num_car_out * 20
-

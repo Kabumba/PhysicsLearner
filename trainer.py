@@ -72,24 +72,11 @@ def start_training(config):
         model = IndependentSplit(config)
     if config.model_type is None:
         raise ValueError(f'{config.model_type} is not a supported model type!')
-    model = model.to(device)
-    optimizer = torch.optim.Adam(model.parameters(), lr=config.learning_rate)
+    model.to(device)
+    model.init_optim()
 
     # load checkpoint
-    if not os.path.exists(config.checkpoint_path):
-        os.mkdir(config.checkpoint_path)
-    else:
-        checkpoints = os.listdir(config.checkpoint_path)
-        paths = [os.path.join(config.checkpoint_path, basename) for basename in checkpoints]
-        if config.continue_from_checkpoint and len(checkpoints) > 0:
-            cp_file = max(paths, key=os.path.getctime)
-            log(f"Found existing model with that name, continue from latest checkpoint {cp_file}")
-            loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
-            start_epoch = loaded_checkpoint["epoch"]
-            steps = loaded_checkpoint["step"]
-            device = loaded_checkpoint["device"]
-            model.load_state_dict(loaded_checkpoint["model_state"])
-            optimizer.load_state_dict(loaded_checkpoint["optim_state"])
+    model.load_checkpoint()
     log(model)
 
     # setup DataLoader
@@ -126,13 +113,14 @@ def start_training(config):
             running_loss += loss.item()
 
             # zero gradients
-            optimizer.zero_grad()
+            model.zero_grad()
 
             # backward pass
             loss.backward()
 
             # updates
-            optimizer.step()
+            model.optim_step()
+            model.update_training_steps(x_train.shape[0])
 
             del y_train
             del y_predicted
@@ -152,8 +140,6 @@ def start_training(config):
                 steps_last_tensor_log = 0
                 iterations_last_tensor_log = 0
 
-
-
             # printed logs
             if steps_last_log >= config.steps_per_log:
                 logged_loss = running_loss / iterations_last_log
@@ -165,16 +151,7 @@ def start_training(config):
             # checkpoints
             if steps >= config.max_steps or steps_last_checkpoint >= config.steps_per_checkpoint:
                 steps_last_checkpoint = 0
-                checkpoint = {
-                    "epoch": epoch,
-                    "device": device,
-                    "step": steps,
-                    "model_state": model.state_dict(),
-                    "optim_state": optimizer.state_dict()
-                }
-                file_name = "cp_" + str(steps) + ".pth"
-                torch.save(checkpoint, os.path.join(config.checkpoint_path, file_name))
-                log(f'step: {steps}, saved checkpoint as {file_name}')
+                model.save_checkpoint(epoch, device, steps)
 
             if steps >= config.max_steps:
                 break

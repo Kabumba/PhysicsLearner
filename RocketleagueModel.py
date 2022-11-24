@@ -1,7 +1,10 @@
+import os
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+from logger import log
 from metrics import Metrics
 
 
@@ -10,6 +13,25 @@ class RocketLeagueModel(nn.Module):
         super(RocketLeagueModel, self).__init__()
         self.config = config
         self.reset_running_losses()
+        self.models = {}
+        self.optimizers = {}
+        self.train = {}
+        self.init_train_models()
+
+    def init_optim(self):
+        for name in self.models.keys():
+            model = self.models[name]
+            self.optimizers[name] = torch.optim.Adam(model.parameters(), lr=self.config.learning_rate)
+
+    def optim_zero_grad(self):
+        for optimizer in self.optimizers:
+            optimizer.zero_grad()
+
+    def optim_step(self):
+        for name in self.models.keys():
+            if self.train[name]:
+                optimizer = self.optimizers[name]
+                optimizer.step()
 
     def reset_running_losses(self):
         self.running_loss = 0
@@ -41,38 +63,116 @@ class RocketLeagueModel(nn.Module):
         self.running_c_is_demo_acc = 0
 
     def forward(self, x):
-        # Overwrite
-        pass
+        y = ()
+        for model in self.models:
+            y = y + (self.models[model].forward(x),)
+        return self.format_prediction(y)
 
     def format_prediction(self, y_predicted):
         # Overwrite
         pass
 
+    def format_losses(self):
+        # Overwrite
+        pass
+
+    def init_train_models(self):
+        # Overwrite
+        pass
+
+    def accumulate_loss(self, b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss, c_vel_loss,
+                        c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss,
+                        c_is_demo_loss):
+        loss = b_pos_loss + b_vel_loss + b_ang_vel_loss + c_pos_loss + c_forward_loss + c_up_loss + c_vel_loss + c_ang_vel_loss + c_on_ground_loss + c_ball_touch_loss + c_has_jump_loss + c_has_flip_loss + c_is_demo_loss
+        return loss
+
+    def update_training_steps(self, delta_steps):
+        for name in self.models.keys():
+            if self.train[name]:
+                self.models[name].steps += delta_steps
+
+    def to(self, device):
+        for model in self.models:
+            self.models[model].to(device)
+
+    def load_checkpoint(self):
+        start_epoch = 0
+        steps = 0
+        if not os.path.exists(self.config.checkpoint_path):
+            os.mkdir(self.config.checkpoint_path)
+        else:
+            checkpoints = os.listdir(self.config.checkpoint_path)
+            paths = [os.path.join(self.config.checkpoint_path, basename) for basename in checkpoints]
+            if self.config.continue_from_checkpoint and len(checkpoints) > 0:
+                cp_file = max(paths, key=os.path.getctime)
+                log(f"Found existing model with that name, continue from latest checkpoint {cp_file}")
+                loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
+                start_epoch = loaded_checkpoint["epoch"]
+                steps = loaded_checkpoint["step"]
+                device = loaded_checkpoint["device"]
+                for name in self.models.keys():
+                    model = self.models[name]
+                    optimizer = self.optimizers[name]
+                    model_cp_path = os.path.join(self.config.checkpoint_path, name)
+                    checkpoints = os.listdir(model_cp_path)
+                    paths = [os.path.join(model_cp_path, basename) for basename in checkpoints]
+                    if self.config.continue_from_checkpoint and len(checkpoints) > 0:
+                        cp_file = max(paths, key=os.path.getctime)
+                        log(f"Found existing model for {name}, continue from latest checkpoint {cp_file}")
+                        loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
+                        model.steps = loaded_checkpoint["steps"]
+                        model.load_state_dict(loaded_checkpoint["model_state"])
+                        optimizer.load_state_dict(loaded_checkpoint["optim_state"])
+        return start_epoch, steps
+
+    def save_checkpoint(self, epoch, device, steps):
+        checkpoint = {
+            "epoch": epoch,
+            "device": device,
+            "step": steps,
+        }
+        file_name = "cph_" + str(steps) + ".cph"
+        torch.save(checkpoint, os.path.join(self.config.checkpoint_path, file_name))
+        for name in self.models.keys():
+            model = self.models[name]
+            optimizer = self.optimizers[name]
+            model_cp_path = os.path.join(self.config.checkpoint_path, name)
+            checkpoint = {
+                "step": model.steps,
+                "model_state": model.state_dict(),
+                "optim_state": optimizer.state_dict()
+            }
+            if not os.path.exists(model_cp_path):
+                os.mkdir(model_cp_path)
+            file_name = f"cp_{name}_{model.steps}.cp"
+            torch.save(checkpoint, os.path.join(model_cp_path, file_name))
+
     def criterion(self, y_predicted, y_train, x_train):
         b_pos_pred, b_vel_pred, b_ang_vel_pred, c_pos_pred, c_forward_pred, c_up_pred, c_vel_pred, c_ang_vel_pred, c_on_ground_pred, c_ball_touch_pred, c_has_jump_pred, c_has_flip_pred, c_is_demo_pred = self.format_prediction(
             y_predicted)
-        mse_loss = nn.MSELoss()
-        bce_loss = nn.BCELoss()
 
-        b_pos_loss = mse_loss(b_pos_pred, y_train[:, 0:3])
-        b_vel_loss = mse_loss(b_vel_pred, y_train[:, 3:6])
-        b_ang_vel_loss = mse_loss(b_ang_vel_pred, y_train[:, 6:9])
+        b_pos_l, b_vel_l, b_ang_vel_l, c_pos_l, c_forward_l, c_up_l, c_vel_l, c_ang_vel_l, c_on_ground_l, c_ball_touch_l, c_has_jump_l, c_has_flip_l, c_is_demo_l = self.format_losses()
 
-        c_pos_loss = mse_loss(c_pos_pred, y_train[:, 9:12])
-        c_forward_loss = mse_loss(c_forward_pred, y_train[:, 12:15])
-        c_up_loss = mse_loss(c_up_pred, y_train[:, 15:18])
-        c_vel_loss = mse_loss(c_vel_pred, y_train[:, 18:21])
-        c_ang_vel_loss = mse_loss(c_ang_vel_pred, y_train[:, 21:24])
+        b_pos_loss = b_pos_l(b_pos_pred, y_train[:, 0:3])
+        b_vel_loss = b_vel_l(b_vel_pred, y_train[:, 3:6])
+        b_ang_vel_loss = b_ang_vel_l(b_ang_vel_pred, y_train[:, 6:9])
 
-        c_on_ground_loss = bce_loss(c_on_ground_pred, y_train[:, 24])
-        c_ball_touch_loss = bce_loss(c_ball_touch_pred, y_train[:, 25])
-        c_has_jump_loss = bce_loss(c_has_jump_pred, y_train[:, 26])
-        c_has_flip_loss = bce_loss(c_has_flip_pred, y_train[:, 27])
-        c_is_demo_loss = bce_loss(c_is_demo_pred, y_train[:, 28])
+        c_pos_loss = c_pos_l(c_pos_pred, y_train[:, 9:12])
+        c_forward_loss = c_forward_l(c_forward_pred, y_train[:, 12:15])
+        c_up_loss = c_up_l(c_up_pred, y_train[:, 15:18])
+        c_vel_loss = c_vel_l(c_vel_pred, y_train[:, 18:21])
+        c_ang_vel_loss = c_ang_vel_l(c_ang_vel_pred, y_train[:, 21:24])
+
+        n = y_train.shape[0]
+        c_on_ground_loss = c_on_ground_l(c_on_ground_pred, y_train[:, 24].view(n, 1))
+        c_ball_touch_loss = c_ball_touch_l(c_ball_touch_pred, y_train[:, 25].view(n, 1))
+        c_has_jump_loss = c_has_jump_l(c_has_jump_pred, y_train[:, 26].view(n, 1))
+        c_has_flip_loss = c_has_flip_l(c_has_flip_pred, y_train[:, 27].view(n, 1))
+        c_is_demo_loss = c_is_demo_l(c_is_demo_pred, y_train[:, 28].view(n, 1))
 
         loss = self.accumulate_loss(b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss,
-                                    c_vel_loss, c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss,
-                                    c_is_demo_loss)
+                                    c_vel_loss, c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss,
+                                    c_has_flip_loss, c_is_demo_loss)
 
         self.running_loss += loss.item()
         self.running_b_pos_loss += b_pos_loss.item()
@@ -111,11 +211,6 @@ class RocketLeagueModel(nn.Module):
         self.running_c_is_demo_acc += M.acc(c_is_demo_pred, y_train[:, 28])
 
         return loss
-
-    def accumulate_loss(self, b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss, c_vel_loss,
-                        c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss, c_has_flip_loss, c_is_demo_loss):
-        # Overwrite
-        pass
 
     def tensor_log(self, writer, iterations_last_tensor_log, global_step):
         f = 1 / iterations_last_tensor_log

@@ -35,6 +35,7 @@ class ObservationTransformer:
         y_new = torch.zeros(self.config.out_size, device=y.device)
         fci = 0  # first car index input
         fco = 0  # first car index output
+        dbi = self.config.num_car_in * 46 # index where delta ball obs start
 
         # car swap
         swap_cars = False
@@ -56,24 +57,39 @@ class ObservationTransformer:
                 y = mirror_data.invert_state(y)
 
         # inputs
+
         if self.config.ball_in:
             x_new[:9] = x[:9]
             fci = 9
+            dbi += 9
+        else:
+            if self.config.delta_inputs:
+                fci = 9
         if self.config.num_car_in == 1:
             if swap_cars:
                 x_new[fci:fci + 38] = x[47:85]
-                x_new[fci + 38:] = x[93:]
+                x_new[fci + 38: fci + 46] = x[93:]
             else:
                 x_new[fci:fci + 38] = x[9:47]
-                x_new[fci + 38:] = x[85:93]
+                x_new[fci + 38: fci + 46] = x[85:93]
         if self.config.num_car_in == 2:
             if swap_cars:
                 x_new[fci:fci + 38] = x[47:85]
                 x_new[fci + 38:fci + 76] = x[9:47]
                 x_new[fci + 76:fci + 84] = x[93:]
-                x_new[fci + 84:] = x[85:93]
+                x_new[fci + 84:fci + 92] = x[85:93]
             else:
-                x_new[fci:] = x[9:]
+                x_new[fci:fci + 92] = x[9:]
+            x_new[fci + 38:fci + 53] -= x_new[9:24]
+        if self.config.ball_in:
+            if self.config.delta_inputs:
+                x_new[dbi:dbi + 3] = x[:3] - x_new[9:12]
+                x_new[dbi + 3:dbi + 9] = x[3:9] - x_new[18:24]
+        else:
+            if self.config.delta_inputs:
+                fci = 9
+                x_new[:3] = x[:3]-x_new[9:12]
+                x_new[3:9] = x[3:9] - x_new[18:24]
 
         # targets
         if self.config.ball_out:
@@ -111,7 +127,6 @@ class ObservationTransformer:
                 y_new[fco + 20:fco + 23] -= x_new[fci + 47:fci + 50]
                 y_new[fco + 23:fco + 29] -= x_new[fci + 50:fci + 56]
                 y_new[fco + 29:fco + 35] -= x_new[fci + 56:fci + 62]
-
         return x_new, y_new
 
 
