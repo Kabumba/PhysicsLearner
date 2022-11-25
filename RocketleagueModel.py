@@ -19,16 +19,17 @@ class RocketLeagueModel(nn.Module):
         self.init_train_models()
 
     def init_optim(self):
-        for name in self.models.keys():
+        for name in self.models:
             model = self.models[name]
             self.optimizers[name] = torch.optim.Adam(model.parameters(), lr=self.config.learning_rate)
 
     def optim_zero_grad(self):
-        for optimizer in self.optimizers:
+        for name in self.models:
+            optimizer = self.optimizers[name]
             optimizer.zero_grad()
 
     def optim_step(self):
-        for name in self.models.keys():
+        for name in self.models:
             if self.train[name]:
                 optimizer = self.optimizers[name]
                 optimizer.step()
@@ -147,11 +148,14 @@ class RocketLeagueModel(nn.Module):
             file_name = f"cp_{name}_{model.steps}.cp"
             torch.save(checkpoint, os.path.join(model_cp_path, file_name))
 
+
     def criterion(self, y_predicted, y_train, x_train):
         b_pos_pred, b_vel_pred, b_ang_vel_pred, c_pos_pred, c_forward_pred, c_up_pred, c_vel_pred, c_ang_vel_pred, c_on_ground_pred, c_ball_touch_pred, c_has_jump_pred, c_has_flip_pred, c_is_demo_pred = self.format_prediction(
             y_predicted)
 
         b_pos_l, b_vel_l, b_ang_vel_l, c_pos_l, c_forward_l, c_up_l, c_vel_l, c_ang_vel_l, c_on_ground_l, c_ball_touch_l, c_has_jump_l, c_has_flip_l, c_is_demo_l = self.format_losses()
+        mse_loss = nn.MSELoss()
+        bce_loss = nn.BCELoss()
 
         b_pos_loss = b_pos_l(b_pos_pred, y_train[:, 0:3])
         b_vel_loss = b_vel_l(b_vel_pred, y_train[:, 3:6])

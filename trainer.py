@@ -113,7 +113,7 @@ def start_training(config):
             running_loss += loss.item()
 
             # zero gradients
-            model.zero_grad()
+            model.optim_zero_grad()
 
             # backward pass
             loss.backward()
