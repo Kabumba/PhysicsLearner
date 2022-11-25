@@ -1,4 +1,7 @@
+import math
 import os.path
+import random
+import shutil
 
 import torch
 from torch.utils.data import DataLoader
@@ -12,6 +15,7 @@ from independent3 import Independent3
 from independent1 import Independent
 from independent2 import Independent2
 from naive import Naive
+from partition import create_partition
 from split import Split
 
 """
@@ -76,7 +80,7 @@ def start_training(config):
     model.init_optim()
 
     # load checkpoint
-    model.load_checkpoint()
+    start_epoch, steps = model.load_checkpoint()
     log(model)
 
     # setup DataLoader
@@ -95,11 +99,12 @@ def start_training(config):
     iterations_last_tensor_log = 0
     running_loss = 0.0
     max_epoch = 100000
-    num_partitions = 3
+    num_partitions = config.num_partitions
 
     log(f"-------------- Start Training! --------------")
     for epoch in range(start_epoch, max_epoch):
-        for partition in range(num_partitions):
+        partitions = create_partition(config, num_partitions)
+        for partition in partitions:
             train_dataset = KickoffEnsemble(config.train_path, partition, config)
             train_loader = DataLoader(dataset=train_dataset,
                                       batch_size=batch_size,

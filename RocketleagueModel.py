@@ -6,6 +6,7 @@ import torch.nn.functional as F
 
 from logger import log
 from metrics import Metrics
+from output_formater import ball_output, car_output
 
 
 class RocketLeagueModel(nn.Module):
@@ -123,7 +124,8 @@ class RocketLeagueModel(nn.Module):
                         loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
                         model.steps = loaded_checkpoint["step"]
                         model.load_state_dict(loaded_checkpoint["model_state"])
-                        optimizer.load_state_dict(loaded_checkpoint["optim_state"])
+                        if self.config.load_optim:
+                            optimizer.load_state_dict(loaded_checkpoint["optim_state"])
         return start_epoch, steps
 
     def save_checkpoint(self, epoch, device, steps):
@@ -154,25 +156,25 @@ class RocketLeagueModel(nn.Module):
         b_pos_pred, b_vel_pred, b_ang_vel_pred, c_pos_pred, c_forward_pred, c_up_pred, c_vel_pred, c_ang_vel_pred, c_on_ground_pred, c_ball_touch_pred, c_has_jump_pred, c_has_flip_pred, c_is_demo_pred = y_predicted
 
         b_pos_l, b_vel_l, b_ang_vel_l, c_pos_l, c_forward_l, c_up_l, c_vel_l, c_ang_vel_l, c_on_ground_l, c_ball_touch_l, c_has_jump_l, c_has_flip_l, c_is_demo_l = self.format_losses()
-        mse_loss = nn.MSELoss()
-        bce_loss = nn.BCELoss()
 
-        b_pos_loss = b_pos_l(b_pos_pred, y_train[:, 0:3])
-        b_vel_loss = b_vel_l(b_vel_pred, y_train[:, 3:6])
-        b_ang_vel_loss = b_ang_vel_l(b_ang_vel_pred, y_train[:, 6:9])
+        ball_y = ball_output(x_train, y_train)
+        b_pos_loss = b_pos_l(b_pos_pred, ball_y[:, 0:3])
+        b_vel_loss = b_vel_l(b_vel_pred, ball_y[:, 3:6])
+        b_ang_vel_loss = b_ang_vel_l(b_ang_vel_pred, ball_y[:, 6:9])
 
-        c_pos_loss = c_pos_l(c_pos_pred, y_train[:, 9:12])
-        c_forward_loss = c_forward_l(c_forward_pred, y_train[:, 12:15])
-        c_up_loss = c_up_l(c_up_pred, y_train[:, 15:18])
-        c_vel_loss = c_vel_l(c_vel_pred, y_train[:, 18:21])
-        c_ang_vel_loss = c_ang_vel_l(c_ang_vel_pred, y_train[:, 21:24])
+        car_y = car_output(x_train, y_train)
+        c_pos_loss = c_pos_l(c_pos_pred, car_y[:, 0:3])
+        c_forward_loss = c_forward_l(c_forward_pred, car_y[:, 3:6])
+        c_up_loss = c_up_l(c_up_pred, car_y[:, 6:9])
+        c_vel_loss = c_vel_l(c_vel_pred, car_y[:, 9:12])
+        c_ang_vel_loss = c_ang_vel_l(c_ang_vel_pred, car_y[:, 12:15])
 
         n = y_train.shape[0]
-        c_on_ground_loss = c_on_ground_l(c_on_ground_pred, y_train[:, 24].view(n, 1))
-        c_ball_touch_loss = c_ball_touch_l(c_ball_touch_pred, y_train[:, 25].view(n, 1))
-        c_has_jump_loss = c_has_jump_l(c_has_jump_pred, y_train[:, 26].view(n, 1))
-        c_has_flip_loss = c_has_flip_l(c_has_flip_pred, y_train[:, 27].view(n, 1))
-        c_is_demo_loss = c_is_demo_l(c_is_demo_pred, y_train[:, 28].view(n, 1))
+        c_on_ground_loss = c_on_ground_l(c_on_ground_pred, car_y[:, 15].view(n, 1))
+        c_ball_touch_loss = c_ball_touch_l(c_ball_touch_pred, car_y[:, 16].view(n, 1))
+        c_has_jump_loss = c_has_jump_l(c_has_jump_pred, car_y[:, 17].view(n, 1))
+        c_has_flip_loss = c_has_flip_l(c_has_flip_pred, car_y[:, 18].view(n, 1))
+        c_is_demo_loss = c_is_demo_l(c_is_demo_pred, car_y[:, 19].view(n, 1))
 
         loss = self.accumulate_loss(b_pos_loss, b_vel_loss, b_ang_vel_loss, c_pos_loss, c_forward_loss, c_up_loss,
                                     c_vel_loss, c_ang_vel_loss, c_on_ground_loss, c_ball_touch_loss, c_has_jump_loss,

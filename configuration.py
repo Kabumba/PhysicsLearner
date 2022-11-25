@@ -17,7 +17,9 @@ class Configuration:
         self.train_path = self.data_path + "/Train"
         self.test_path = self.data_path + "/Test"
         self.model_type = "Split"
+        self.num_partitions = 1
         self.continue_from_checkpoint = True
+        self.load_optim = True
         self.pin_memory = True
         self.num_workers = 0
         self.batch_size = 256

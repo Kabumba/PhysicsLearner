@@ -50,73 +50,24 @@ class ObservationTransformer:
 
         # inputs
 
-        if self.config.ball_in:
-            x_new[:9] = x[:9]
-            fci = 9
-            dbi += 9
+        x_new[:9] = x[:9]
+        if swap_cars:
+            x_new[9:47] = x[47:85]
+            x_new[47:85] = x[9:47]
+            x_new[85:93] = x[93:101]
+            x_new[93:101] = x[85:93]
         else:
-            if self.config.delta_inputs:
-                fci = 9
-        if self.config.num_car_in == 1:
-            if swap_cars:
-                x_new[fci:fci + 38] = x[47:85]
-                x_new[fci + 38: fci + 46] = x[93:]
-            else:
-                x_new[fci:fci + 38] = x[9:47]
-                x_new[fci + 38: fci + 46] = x[85:93]
-        if self.config.num_car_in == 2:
-            if swap_cars:
-                x_new[fci:fci + 38] = x[47:85]
-                x_new[fci + 38:fci + 76] = x[9:47]
-                x_new[fci + 76:fci + 84] = x[93:]
-                x_new[fci + 84:fci + 92] = x[85:93]
-            else:
-                x_new[fci:fci + 92] = x[9:]
-            x_new[fci + 38:fci + 53] -= x_new[9:24]
-        if self.config.ball_in:
-            if self.config.delta_inputs:
-                x_new[dbi:dbi + 3] = x[:3] - x_new[9:12]
-                x_new[dbi + 3:dbi + 9] = x[3:9] - x_new[18:24]
-        else:
-            if self.config.delta_inputs:
-                fci = 9
-                x_new[:3] = x[:3]-x_new[9:12]
-                x_new[3:9] = x[3:9] - x_new[18:24]
+            x_new[9:101] = x[9:101]
 
-        # targets
-        if self.config.ball_out:
-            y_new[:9] = y[:9]
-            fco = 9
-            if self.config.delta_targets:
-                y_new[:9] -= x_new[:9]
-        if self.config.num_car_out >= 1:
-            if swap_cars:
-                y_new[fco:fco + 15] = y[47:62]
+        y_new[:9] = y[:9]
+        if swap_cars:
+                y_new[9:24] = y[47:62]
                 # skip over boost-amount
-                y_new[fco + 15:fco + 20] = y[63:68]
+                y_new[24:29] = y[63:68]
                 # leave out time related data
-            else:
-                y_new[fco:fco + 15] = y[9:24]
+        else:
+                y_new[9:24] = y[9:24]
                 # skip over boost-amount
-                y_new[fco + 15:fco + 20] = y[25:30]
+                y_new[24:29] = y[25:30]
                 # leave out time related data
-            if self.config.delta_targets:
-                y_new[fco:fco + 3] -= x_new[fci:fci+3]
-                y_new[fco+3:fco + 9] -= x_new[fci+3:fci + 9]
-                y_new[fco + 9:fco + 15] -= x_new[fci + 9:fci + 15]
-        if self.config.num_car_out == 2:
-            if swap_cars:
-                y_new[fco + 20:fco + 35] = y[9:24]
-                # skip over boost-amount
-                y_new[fco + 35:fco + 40] = y[25:30]
-                # leave out time related data
-            else:
-                y_new[fco + 20:fco + 35] = y[47:62]
-                # skip over boost-amount
-                y_new[fco + 35:fco + 40] = y[63:68]
-                # leave out time related data
-            if self.config.delta_targets:
-                y_new[fco + 20:fco + 23] -= x_new[fci + 47:fci + 50]
-                y_new[fco + 23:fco + 29] -= x_new[fci + 50:fci + 56]
-                y_new[fco + 29:fco + 35] -= x_new[fci + 56:fci + 62]
         return x_new, y_new
