@@ -1,3 +1,5 @@
+import sys
+
 import numpy
 import torch
 import torch.nn.functional as F
@@ -94,7 +96,8 @@ class Metrics:
         og_pred = torch.gt(y_pred, 0.5).type(torch.float32)
         og_true = torch.gt(y_true, 0.5).type(torch.float32)
         og_diff = torch.abs(og_true - og_pred)
-        return torch.mean(1 - og_diff).item()
+        mean = torch.mean(1 - og_diff)
+        return mean.item()
 
 
 def rot_matrix_from_forward_up(forward, up):

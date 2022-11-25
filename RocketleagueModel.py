@@ -121,7 +121,7 @@ class RocketLeagueModel(nn.Module):
                         cp_file = max(paths, key=os.path.getctime)
                         log(f"Found existing model for {name}, continue from latest checkpoint {cp_file}")
                         loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
-                        model.steps = loaded_checkpoint["steps"]
+                        model.steps = loaded_checkpoint["step"]
                         model.load_state_dict(loaded_checkpoint["model_state"])
                         optimizer.load_state_dict(loaded_checkpoint["optim_state"])
         return start_epoch, steps
@@ -133,6 +133,7 @@ class RocketLeagueModel(nn.Module):
             "step": steps,
         }
         file_name = "cph_" + str(steps) + ".cph"
+        log(f"Saved Checkpoint after {steps} as {file_name}")
         torch.save(checkpoint, os.path.join(self.config.checkpoint_path, file_name))
         for name in self.models.keys():
             model = self.models[name]
@@ -208,11 +209,11 @@ class RocketLeagueModel(nn.Module):
             self.running_c_up_sim += M.cos_sim(c_up_pred, y_train[:, 15:18])
         self.running_c_vel_diff += M.euclid(c_vel_pred, y_train[:, 18:21])
         self.running_c_ang_vel_diff += M.euclid(c_ang_vel_pred, y_train[:, 21:24])
-        self.running_c_on_ground_acc += M.acc(c_on_ground_pred, y_train[:, 24])
-        self.running_c_ball_touch_acc += M.acc(c_ball_touch_pred, y_train[:, 25])
-        self.running_c_has_jump_acc += M.acc(c_has_jump_pred, y_train[:, 26])
-        self.running_c_has_flip_acc += M.acc(c_has_flip_pred, y_train[:, 27])
-        self.running_c_is_demo_acc += M.acc(c_is_demo_pred, y_train[:, 28])
+        self.running_c_on_ground_acc += M.acc(c_on_ground_pred, y_train[:, 24].view(n, 1))
+        self.running_c_ball_touch_acc += M.acc(c_ball_touch_pred, y_train[:, 25].view(n, 1))
+        self.running_c_has_jump_acc += M.acc(c_has_jump_pred, y_train[:, 26].view(n, 1))
+        self.running_c_has_flip_acc += M.acc(c_has_flip_pred, y_train[:, 27].view(n, 1))
+        self.running_c_is_demo_acc += M.acc(c_is_demo_pred, y_train[:, 28].view(n, 1))
 
         return loss
 

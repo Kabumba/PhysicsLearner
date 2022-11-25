@@ -52,7 +52,7 @@ def start_training(config):
 
     # 0) prepare data
     log("Training Data")
-    train_dataset = KickoffEnsemble(config.train_path, config)
+
 
     # 1) setup model and optimizer
     start_epoch = 0
@@ -84,13 +84,7 @@ def start_training(config):
     # mem_buffer = 1050000000
     # batch_size = math.floor((free_mem - mem_buffer) / (32 * config.in_size))
     batch_size = config.batch_size
-    train_loader = DataLoader(dataset=train_dataset,
-                              batch_size=batch_size,
-                              shuffle=True,
-                              num_workers=config.num_workers,
-                              pin_memory=config.pin_memory,
-                              # generator=torch.Generator(device=device)
-                              )
+
     log(f"Total Memory: {total_mem}B, Free Memory: {free_mem}B, Batch Size: {batch_size}, Worker: {config.num_workers}")
 
     # 3) training loop
@@ -104,6 +98,14 @@ def start_training(config):
 
     log(f"-------------- Start Training! --------------")
     for epoch in range(start_epoch, max_epoch):
+        train_dataset = KickoffEnsemble(config.train_path, config)
+        train_loader = DataLoader(dataset=train_dataset,
+                                  batch_size=batch_size,
+                                  shuffle=True,
+                                  num_workers=config.num_workers,
+                                  pin_memory=config.pin_memory,
+                                  # generator=torch.Generator(device=device)
+                                  )
         for i, (x_train, y_train) in enumerate(train_loader):
             x_train, y_train = x_train.to(device), y_train.to(device)
             # forward pass and loss
@@ -155,6 +157,8 @@ def start_training(config):
 
             if steps >= config.max_steps:
                 break
+        del train_loader
+        del train_dataset
         if steps >= config.max_steps:
             break
     log(f"Model has trained for {config.max_steps} steps. Run over.")

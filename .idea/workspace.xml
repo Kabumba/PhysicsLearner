@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="elementarisierung">
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="bugfixes">
+      <change afterPath="$PROJECT_DIR$/Bool2Model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/RotModel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Vec32Model.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/observation_transformer.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/RocketleagueModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/independent2.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/umordnen.py" beforeDir="false" afterPath="$PROJECT_DIR$/umordnen.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -99,7 +107,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--name NeueStruktur" />
+      <option name="PARAMETERS" value="--name 2Hidden" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -241,7 +249,7 @@
       <workItem from="1668928837709" duration="43174000" />
       <workItem from="1669101538301" duration="920000" />
       <workItem from="1669144079163" duration="2377000" />
-      <workItem from="1669197113533" duration="23059000" />
+      <workItem from="1669197113533" duration="30033000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -446,7 +454,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669332506668</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="bugfixes">
+      <created>1669334984062</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1669334984062</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -478,7 +493,8 @@
     <MESSAGE value="fix checkpoint loading" />
     <MESSAGE value="updates" />
     <MESSAGE value="elementarisierung" />
-    <option name="LAST_COMMIT_MESSAGE" value="elementarisierung" />
+    <MESSAGE value="bugfixes" />
+    <option name="LAST_COMMIT_MESSAGE" value="bugfixes" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1668415471141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

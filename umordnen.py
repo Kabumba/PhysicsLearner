@@ -1,14 +1,14 @@
+import math
 import os
 import random
 import shutil
 
 from configuration import Configuration
 
-gs_path = "C:/Users/Frederik/Masterarbeit/Data/GameStates"
+gs_path = "C:/Users/Frederik/Masterarbeit/Data/Train"
 files = os.listdir(gs_path)
 for f in files:
-    if random.Random().uniform(0, 1) < 0.2:
-        shutil.copy(os.path.join(gs_path, f), os.path.join("C:/Users/Frederik/Masterarbeit/Data/Test", f))
-    else:
-        shutil.copy(os.path.join(gs_path, f), os.path.join("C:/Users/Frederik/Masterarbeit/Data/Train", f))
+    if f.endswith(".pt"):
+        r = math.floor(random.Random().uniform(0, 3))
+        shutil.move(os.path.join(gs_path, f), os.path.join(f"C:/Users/Frederik/Masterarbeit/Data/Train/Train{r}", f))
 print("Done")
