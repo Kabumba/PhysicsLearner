@@ -151,7 +151,6 @@ class RocketLeagueModel(nn.Module):
             file_name = f"cp_{name}_{model.steps}.cp"
             torch.save(checkpoint, os.path.join(model_cp_path, file_name))
 
-
     def criterion(self, y_predicted, y_train, x_train):
         b_pos_pred, b_vel_pred, b_ang_vel_pred, c_pos_pred, c_forward_pred, c_up_pred, c_vel_pred, c_ang_vel_pred, c_on_ground_pred, c_ball_touch_pred, c_has_jump_pred, c_has_flip_pred, c_is_demo_pred = y_predicted
 

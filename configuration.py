@@ -15,6 +15,7 @@ class Configuration:
         self.configuration_path = self.result_path + "/configuration.yaml"
         self.data_path = self.base_path + "/Data"
         self.train_path = self.data_path + "/Train"
+        self.loss_path = self.data_path + "/TrainLoss"
         self.test_path = self.data_path + "/Test"
         self.model_type = "Split"
         self.num_partitions = 1

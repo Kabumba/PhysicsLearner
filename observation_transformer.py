@@ -25,9 +25,6 @@ class ObservationTransformer:
         x, y = sample
         x_new = torch.zeros(self.config.in_size, device=x.device)
         y_new = torch.zeros(self.config.out_size, device=y.device)
-        fci = 0  # first car index input
-        fco = 0  # first car index output
-        dbi = self.config.num_car_in * 46 # index where delta ball obs start
 
         # car swap
         swap_cars = False
@@ -61,13 +58,13 @@ class ObservationTransformer:
 
         y_new[:9] = y[:9]
         if swap_cars:
-                y_new[9:24] = y[47:62]
-                # skip over boost-amount
-                y_new[24:29] = y[63:68]
-                # leave out time related data
+            y_new[9:24] = y[47:62]
+            # skip over boost-amount
+            y_new[24:29] = y[63:68]
+            # leave out time related data
         else:
-                y_new[9:24] = y[9:24]
-                # skip over boost-amount
-                y_new[24:29] = y[25:30]
-                # leave out time related data
+            y_new[9:24] = y[9:24]
+            # skip over boost-amount
+            y_new[24:29] = y[25:30]
+            # leave out time related data
         return x_new, y_new

@@ -22,6 +22,10 @@ class KickoffDataset(Dataset):
         if self.transform:
             self.n_factor = self.transform.n_factor
             self.n_samples = self.n_factor * self.n_samples
+        # self.losses = torch.ones(self.n_samples)
+        # self.losses.mul_(3000000000.0)
+        # base_name = os.path.splitext(os.path.basename(data_file))[0]
+        # torch.save(os.path.join(config.loss_path, base_name + ".loss"))
 
     def __getitem__(self, index):
         i = math.floor(index / self.n_factor)
@@ -33,6 +37,12 @@ class KickoffDataset(Dataset):
             sample = self.transform(sample, mode)
         # log(f'sample {(sample[0].device, sample[1].device)}')
         return sample
+
+    def update_loss(self, index, loss):
+        self.losses[int(index)] = loss
+
+    def get_loss(self, index):
+        return self.losses[int(index)]
 
     def __len__(self):
         return self.n_samples
@@ -52,11 +62,28 @@ class KickoffEnsemble(Dataset):
         log(f'Loaded {len(self.kickoffs)} files containing {self.n_samples} observations')
 
     def __getitem__(self, index):
+        index = int(index)
         kickoff_index = self.binary_search(0, len(self.kickoffs) - 1, index)
         new_index = index
         if kickoff_index > 0:
             new_index -= self.indices[kickoff_index - 1]
-        return self.kickoffs[kickoff_index][new_index]
+        return self.kickoffs[kickoff_index][new_index], index
+
+    def update_loss(self, index, loss):
+        index = int(index)
+        kickoff_index = self.binary_search(0, len(self.kickoffs) - 1, index)
+        new_index = index
+        if kickoff_index > 0:
+            new_index -= self.indices[kickoff_index - 1]
+        self.kickoffs[kickoff_index].update_loss(new_index, loss)
+
+    def get_loss(self, index):
+        index = int(index)
+        kickoff_index = self.binary_search(0, len(self.kickoffs) - 1, index)
+        new_index = index
+        if kickoff_index > 0:
+            new_index -= self.indices[kickoff_index - 1]
+        return self.kickoffs[kickoff_index].get_loss(new_index)
 
     def binary_search(self, start: int, end: int, value):
         if start == end:

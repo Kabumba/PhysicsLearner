@@ -16,6 +16,7 @@ from independent1 import Independent
 from independent2 import Independent2
 from naive import Naive
 from partition import create_partition
+from priority_sampler import PrioritySampler
 from split import Split
 
 """
@@ -108,12 +109,13 @@ def start_training(config):
             train_dataset = KickoffEnsemble(config.train_path, partition, config)
             train_loader = DataLoader(dataset=train_dataset,
                                       batch_size=batch_size,
+                                      # batch_sampler=PrioritySampler(train_dataset, batch_size, 2),
                                       shuffle=True,
                                       num_workers=config.num_workers,
                                       pin_memory=config.pin_memory,
                                       # generator=torch.Generator(device=device)
                                       )
-            for i, (x_train, y_train) in enumerate(train_loader):
+            for i, ((x_train, y_train), indices) in enumerate(train_loader):
                 x_train, y_train = x_train.to(device), y_train.to(device)
                 # forward pass and loss
 
