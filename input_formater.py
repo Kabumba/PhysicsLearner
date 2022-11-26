@@ -26,7 +26,7 @@ def car_input(x):
     x_car = torch.zeros(x.shape[0], 71, device=x.device)
     # relative ball
     x_car[:, 0:3] = x[:, 0:3] - x[:, 9:12]
-    x_car[:, 3:6] = x[:, 3:6] - x[:, 18:24]
+    x_car[:, 3:9] = x[:, 3:9] - x[:, 18:24]
 
     # absolute main car
     x_car[:, 9:47] = x[:, 9:47]

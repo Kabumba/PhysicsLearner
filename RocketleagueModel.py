@@ -196,25 +196,19 @@ class RocketLeagueModel(nn.Module):
         self.running_c_is_demo_loss += c_is_demo_loss.item()
 
         M = Metrics(self.config)
-        self.running_b_pos_diff += M.euclid(b_pos_pred, y_train[:, 0:3])
-        self.running_b_vel_diff += M.euclid(b_vel_pred, y_train[:, 3:6])
-        self.running_b_ang_vel_diff += M.euclid(b_ang_vel_pred, y_train[:, 6:9])
-        self.running_c_pos_diff += M.euclid(c_pos_pred, y_train[:, 9:12])
-        if self.config.delta_targets:
-            self.running_c_forward_sim += M.cos_sim(c_forward_pred + x_train[:, 12:15],
-                                                    y_train[:, 12:15] + x_train[:, 12:15])
-            self.running_c_up_sim += M.cos_sim(c_up_pred + x_train[:, 15:18],
-                                               y_train[:, 15:18] + x_train[:, 15:18])
-        else:
-            self.running_c_forward_sim += M.cos_sim(c_forward_pred, y_train[:, 12:15])
-            self.running_c_up_sim += M.cos_sim(c_up_pred, y_train[:, 15:18])
-        self.running_c_vel_diff += M.euclid(c_vel_pred, y_train[:, 18:21])
-        self.running_c_ang_vel_diff += M.euclid(c_ang_vel_pred, y_train[:, 21:24])
-        self.running_c_on_ground_acc += M.acc(c_on_ground_pred, y_train[:, 24].view(n, 1))
-        self.running_c_ball_touch_acc += M.acc(c_ball_touch_pred, y_train[:, 25].view(n, 1))
-        self.running_c_has_jump_acc += M.acc(c_has_jump_pred, y_train[:, 26].view(n, 1))
-        self.running_c_has_flip_acc += M.acc(c_has_flip_pred, y_train[:, 27].view(n, 1))
-        self.running_c_is_demo_acc += M.acc(c_is_demo_pred, y_train[:, 28].view(n, 1))
+        self.running_b_pos_diff += M.euclid(b_pos_pred, ball_y[:, 0:3])
+        self.running_b_vel_diff += M.euclid(b_vel_pred, ball_y[:, 3:6])
+        self.running_b_ang_vel_diff += M.euclid(b_ang_vel_pred, ball_y[:, 6:9])
+        self.running_c_pos_diff += M.euclid(c_pos_pred, car_y[:, 0:3])
+        self.running_c_forward_sim += M.cos_sim(c_forward_pred + x_train[:, 12:15], car_y[:, 3:6] + x_train[:, 12:15])
+        self.running_c_up_sim += M.cos_sim(c_up_pred + x_train[:, 15:18], car_y[:, 6:9] + x_train[:, 15:18])
+        self.running_c_vel_diff += M.euclid(c_vel_pred, car_y[:, 9:12])
+        self.running_c_ang_vel_diff += M.euclid(c_ang_vel_pred, car_y[:, 12:15])
+        self.running_c_on_ground_acc += M.acc(c_on_ground_pred, car_y[:, 15].view(n, 1))
+        self.running_c_ball_touch_acc += M.acc(c_ball_touch_pred, car_y[:, 16].view(n, 1))
+        self.running_c_has_jump_acc += M.acc(c_has_jump_pred, car_y[:, 17].view(n, 1))
+        self.running_c_has_flip_acc += M.acc(c_has_flip_pred, car_y[:, 18].view(n, 1))
+        self.running_c_is_demo_acc += M.acc(c_is_demo_pred, car_y[:, 19].view(n, 1))
 
         return loss
 
