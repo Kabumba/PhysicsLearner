@@ -15,7 +15,7 @@ module load nvidia/cuda/11.1.1
 module load gcc/9.2.0
 
 source /home/smfrrohk/anaconda3/bin/activate
-conda activate PL
+conda activate PhysicsLearner
 
 cd /work/smfrrohk/Masterarbeit/PhysicsLearner
 srun python main.py --name $SLURM_JOB_NAME
