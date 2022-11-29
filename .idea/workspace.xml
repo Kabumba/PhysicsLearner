@@ -1,22 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="failed prio">
-      <change afterPath="$PROJECT_DIR$/BoostedModel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/ChooseModel.py" afterDir="false" />
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updatede">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BallVecModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/BallVecModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CarBoolModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/CarBoolModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CarRotModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/CarRotModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CarVecModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/CarVecModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RocketleagueModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/output_formater.py" beforeDir="false" afterPath="$PROJECT_DIR$/output_formater.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runscript.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runscript.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -261,7 +247,8 @@
       <workItem from="1669144079163" duration="2377000" />
       <workItem from="1669197113533" duration="72251000" />
       <workItem from="1669492451268" duration="38641000" />
-      <workItem from="1669711119579" duration="5110000" />
+      <workItem from="1669711119579" duration="5448000" />
+      <workItem from="1669724248698" duration="399000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -508,7 +495,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669495309920</updated>
     </task>
-    <option name="localTasksCounter" value="36" />
+    <task id="LOCAL-00036" summary="updatede">
+      <created>1669723537475</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1669723537475</updated>
+    </task>
+    <option name="localTasksCounter" value="37" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -546,7 +540,8 @@
     <MESSAGE value="new models" />
     <MESSAGE value="bugs" />
     <MESSAGE value="failed prio" />
-    <option name="LAST_COMMIT_MESSAGE" value="failed prio" />
+    <MESSAGE value="updatede" />
+    <option name="LAST_COMMIT_MESSAGE" value="updatede" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1668415471141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
