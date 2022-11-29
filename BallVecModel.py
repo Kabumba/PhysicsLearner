@@ -1,3 +1,4 @@
+import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -5,7 +6,8 @@ import torch.nn.functional as F
 class BallVecModel(nn.Module):
     def __init__(self):
         super(BallVecModel, self).__init__()
-        self.loss = nn.MSELoss()
+        self.mse = nn.MSELoss(reduction="none")
+        self.loss = lambda y_pred, y: torch.mean(self.mse(y_pred, y), dim=1)
         self.steps = 0
 
         self.fc1 = nn.Linear(43, 29)

@@ -1,4 +1,5 @@
 import argparse
+import sys
 
 from configuration import Configuration
 from logger import log
@@ -12,3 +13,4 @@ if __name__ == '__main__':
     configuration = Configuration(args.name)
     start_training(configuration)
     log("Done!")
+    sys.exit()

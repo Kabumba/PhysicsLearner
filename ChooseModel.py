@@ -3,14 +3,14 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 
-class CarBoolModel(nn.Module):
+class ChooseModel(nn.Module):
     def __init__(self):
-        super(CarBoolModel, self).__init__()
+        super(ChooseModel, self).__init__()
         self.bce = nn.BCELoss(reduction="none")
         self.loss = lambda y_pred, y: torch.mean(self.bce(y_pred, y), dim=1)
         self.steps = 0
 
-        self.fc1 = nn.Linear(71, 47)
+        self.fc1 = nn.Linear(77, 47)
         self.fc2 = nn.Linear(47, 24)
         self.fc3 = nn.Linear(24, 1)
 

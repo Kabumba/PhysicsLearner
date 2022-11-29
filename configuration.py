@@ -19,11 +19,13 @@ class Configuration:
         self.test_path = self.data_path + "/Test"
         self.model_type = "Split"
         self.num_partitions = 1
+        self.loss_feedback = 0
         self.continue_from_checkpoint = True
         self.load_optim = True
         self.pin_memory = True
         self.num_workers = 0
         self.batch_size = 256
+        self.batch_repetitions = 1
         self.learning_rate = 0.003
         self.hidden_size = 200
         self.num_hidden_layers = 2
@@ -79,9 +81,6 @@ class Configuration:
         self.num_car_out = max(0, min(2, self.num_car_out))
         if self.ball_in:
             self.in_size += 9
-        if self.num_car_out > 0 and self.ball_out:
-            if self.delta_inputs:
-                self.in_size += 9
         self.in_size += self.num_car_in * 46
         if self.ball_out:
             self.out_size += 9

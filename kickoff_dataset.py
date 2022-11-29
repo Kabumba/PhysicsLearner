@@ -38,12 +38,6 @@ class KickoffDataset(Dataset):
         # log(f'sample {(sample[0].device, sample[1].device)}')
         return sample
 
-    def update_loss(self, index, loss):
-        self.losses[int(index)] = loss
-
-    def get_loss(self, index):
-        return self.losses[int(index)]
-
     def __len__(self):
         return self.n_samples
 
@@ -52,6 +46,8 @@ class KickoffEnsemble(Dataset):
     def __init__(self, data_dir, partition, config: Configuration):
         self.config = config
         log(f"Loading new partition Data into RAM...")
+        if partition == None:
+            partition = os.listdir(data_dir)
         self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config) for file in partition]
         # log(f"Data Device: {self.kickoffs[0].game_states.device}")
         self.n_samples = np.sum(np.array([k.n_samples for k in self.kickoffs]))
@@ -68,22 +64,6 @@ class KickoffEnsemble(Dataset):
         if kickoff_index > 0:
             new_index -= self.indices[kickoff_index - 1]
         return self.kickoffs[kickoff_index][new_index], index
-
-    def update_loss(self, index, loss):
-        index = int(index)
-        kickoff_index = self.binary_search(0, len(self.kickoffs) - 1, index)
-        new_index = index
-        if kickoff_index > 0:
-            new_index -= self.indices[kickoff_index - 1]
-        self.kickoffs[kickoff_index].update_loss(new_index, loss)
-
-    def get_loss(self, index):
-        index = int(index)
-        kickoff_index = self.binary_search(0, len(self.kickoffs) - 1, index)
-        new_index = index
-        if kickoff_index > 0:
-            new_index -= self.indices[kickoff_index - 1]
-        return self.kickoffs[kickoff_index].get_loss(new_index)
 
     def binary_search(self, start: int, end: int, value):
         if start == end:
