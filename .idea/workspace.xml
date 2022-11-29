@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updatede">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runscript.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runscript.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -248,7 +248,7 @@
       <workItem from="1669197113533" duration="72251000" />
       <workItem from="1669492451268" duration="38641000" />
       <workItem from="1669711119579" duration="5448000" />
-      <workItem from="1669724248698" duration="2943000" />
+      <workItem from="1669724248698" duration="3522000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -516,7 +516,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669724904949</updated>
     </task>
-    <option name="localTasksCounter" value="39" />
+    <task id="LOCAL-00039" summary="updatede">
+      <created>1669729173238</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1669729173238</updated>
+    </task>
+    <option name="localTasksCounter" value="40" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
