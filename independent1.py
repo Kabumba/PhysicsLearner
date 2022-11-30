@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from RocketleagueModel import RocketLeagueModel
-from boolModel import BoolModel
+from BoolModel import BoolModel
 from vec3model import Vec3model
 
 

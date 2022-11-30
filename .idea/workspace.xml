@@ -1,7 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updatede" />
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updatede">
+      <change afterPath="$PROJECT_DIR$/ScalarModel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/VecModel.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/independentScalar.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RocketleagueModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/boolModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/BoolModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/independent1.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/independent2.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/independent3.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent3.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/runscript.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runscript.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -88,9 +103,6 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -98,7 +110,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--name Repetitions" />
+      <option name="PARAMETERS" value="--name IndependentScalar" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -246,7 +258,8 @@
       <workItem from="1669197113533" duration="72251000" />
       <workItem from="1669492451268" duration="38641000" />
       <workItem from="1669711119579" duration="5448000" />
-      <workItem from="1669724248698" duration="4176000" />
+      <workItem from="1669724248698" duration="7044000" />
+      <workItem from="1669810704497" duration="12771000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -535,7 +548,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669729976267</updated>
     </task>
-    <option name="localTasksCounter" value="42" />
+    <task id="LOCAL-00042" summary="updatede">
+      <created>1669731189874</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1669731189874</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

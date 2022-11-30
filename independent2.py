@@ -6,7 +6,7 @@ from Bool2Model import Bool2Model
 from RocketleagueModel import RocketLeagueModel
 from RotModel import RotModel
 from Vec32Model import Vec32Model
-from boolModel import BoolModel
+from BoolModel import BoolModel
 from vec3model import Vec3model
 
 

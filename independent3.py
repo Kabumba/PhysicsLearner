@@ -28,24 +28,24 @@ class Independent3(RocketLeagueModel):
 
     def forward(self, x):
         y_pred = (self.models["bpos"].forward(ball_input(x)),
-              self.models["bvel"].forward(ball_input(x)),
-              self.models["bangvel"].forward(ball_input(x)),
-              self.models["cpos"].forward(car_input(x)),
-              self.models["crot"].forward(car_input(x)),
-              self.models["cvel"].forward(car_input(x)),
-              self.models["cangvel"].forward(car_input(x)),
-              self.models["conground"].forward(car_input(x)),
-              self.models["cballtouch"].forward(car_input(x)),
-              self.models["chasjump"].forward(car_input(x)),
-              self.models["chasflip"].forward(car_input(x)),
-              self.models["cisdemo"].forward(car_input(x)),
-              )
+                  self.models["bvel"].forward(ball_input(x)),
+                  self.models["bangvel"].forward(ball_input(x)),
+                  self.models["cpos"].forward(car_input(x)),
+                  self.models["crot"].forward(car_input(x)),
+                  self.models["cvel"].forward(car_input(x)),
+                  self.models["cangvel"].forward(car_input(x)),
+                  self.models["conground"].forward(car_input(x)),
+                  self.models["cballtouch"].forward(car_input(x)),
+                  self.models["chasjump"].forward(car_input(x)),
+                  self.models["chasflip"].forward(car_input(x)),
+                  self.models["cisdemo"].forward(car_input(x)),
+                  )
         return self.format_prediction(y_pred)
 
     def format_prediction(self, y_predicted):
         bpos, bvel, bangvel, cpos, c_rot, cvel, cangvel, conground, cballtouch, chasjump, chasflip, cisdemo = y_predicted
         return bpos, bvel, bangvel, cpos, c_rot[:, 0:3], c_rot[:, 3:6], cvel, cangvel, \
-            conground, cballtouch, chasjump, chasflip, cisdemo
+               conground, cballtouch, chasjump, chasflip, cisdemo
 
     def format_losses(self):
         ls = (self.models["bpos"].loss,

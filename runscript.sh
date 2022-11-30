@@ -2,10 +2,10 @@
 #SBATCH -c 10
 #SBATCH --mem 30G
 #SBATCH --gres=gpu:1
-#SBATCH --partition=short
-#SBATCH --time=02:00:00
+#SBATCH --partition=med
+#SBATCH --time=08:00:00
 #SBATCH --job-name=Test
-#SBATCH --output=/work/smfrrohk/Masterarbeit/Experimente/%x/Logs/run-%j.log
+#SBATCH --output=/work/smfrrohk/Masterarbeit/Logs/run-%j.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
 #-------------------------------------
@@ -18,4 +18,4 @@ source /home/smfrrohk/anaconda3/bin/activate
 conda activate PhysicsLearner
 
 cd /work/smfrrohk/Masterarbeit/PhysicsLearner
-srun python main.py --name $SLURM_JOB_NAME
+srun python main.py --name LiDo

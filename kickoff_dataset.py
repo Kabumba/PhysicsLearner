@@ -14,6 +14,7 @@ class KickoffDataset(Dataset):
     def __init__(self, data_file, config: Configuration):
         # data loading
         self.game_states = torch.load(data_file)  # , map_location=lambda storage, loc: storage.cuda(0))
+        self.config = config
         normalize(config, self.game_states)
         # log(f'self.game_states {self.game_states.device}')
         self.transform = ObservationTransformer(config)
@@ -26,6 +27,16 @@ class KickoffDataset(Dataset):
         # self.losses.mul_(3000000000.0)
         # base_name = os.path.splitext(os.path.basename(data_file))[0]
         # torch.save(os.path.join(config.loss_path, base_name + ".loss"))
+
+    def set_new_config(self, config):
+        unnormalize(self.config, self.game_states)
+        self.config = config
+        normalize(config, self.game_states)
+        self.transform = ObservationTransformer(config)
+        self.n_factor = 1
+        if self.transform:
+            self.n_factor = self.transform.n_factor
+            self.n_samples = self.n_factor * self.n_samples
 
     def __getitem__(self, index):
         i = math.floor(index / self.n_factor)
@@ -46,7 +57,7 @@ class KickoffEnsemble(Dataset):
     def __init__(self, data_dir, partition, config: Configuration):
         self.config = config
         log(f"Loading new partition Data into RAM...")
-        if partition == None:
+        if partition is None:
             partition = os.listdir(data_dir)
         self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config) for file in partition]
         # log(f"Data Device: {self.kickoffs[0].game_states.device}")
@@ -73,6 +84,11 @@ class KickoffEnsemble(Dataset):
             return self.binary_search(mid + 1, end, value)
         if value < self.indices[mid]:
             return self.binary_search(start, mid, value)
+
+    def set_new_config(self, config):
+        self.config = config
+        for kickoff in self.kickoffs:
+            kickoff.set_new_config(config)
 
     def __len__(self):
         return self.n_samples
@@ -151,3 +167,77 @@ def normalize(config, game_states):
         1, 1, 1, 1, 1, 1, 1, 1  # car2
     ], device=game_states.device)
     game_states[:, :85] = game_states[:, :85] * coefs[:85]
+
+def unnormalize(config, game_states):
+    coefs = torch.tensor([
+        # ball
+        1 / config.ball_pos_norm_factor,
+        1 / config.ball_pos_norm_factor,
+        1 / config.ball_pos_norm_factor,  # pos
+        1 / config.ball_vel_norm_factor,
+        1 / config.ball_vel_norm_factor,
+        1 / config.ball_vel_norm_factor,  # vel
+        1 / config.ball_ang_vel_norm_factor,
+        1 / config.ball_ang_vel_norm_factor,
+        1 / config.ball_ang_vel_norm_factor,  # ang_vel
+        # car1
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,  # pos
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,  # ang_vel
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  # bools and timings
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward flip
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up flip
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel flip
+        1,  # pitch flip
+        1,  # yaw + roll flip
+        # car2
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,
+        1 / config.car_pos_norm_factor,  # pos
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,
+        1 / config.car_ang_vel_norm_factor,  # ang_vel
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,  # bools and timings
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # forward flip
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,
+        1 / config.car_ang_norm_factor,  # up flip
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,
+        1 / config.car_vel_norm_factor,  # vel flip
+        1,  # pitch flip
+        1,  # yaw + roll flip
+        # inputs
+        1, 1, 1, 1, 1, 1, 1, 1,  # car1
+        1, 1, 1, 1, 1, 1, 1, 1  # car2
+    ], device=game_states.device)
+    game_states[:, :85] = game_states[:, :85] / coefs[:85]

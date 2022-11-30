@@ -22,18 +22,26 @@ class RocketLeagueModel(nn.Module):
     def init_optim(self):
         for name in self.models:
             model = self.models[name]
-            self.optimizers[name] = torch.optim.Adam(model.parameters(), lr=self.config.learning_rate)
+            self.optimizers[name] = model.init_optim()
 
     def optim_zero_grad(self):
         for name in self.models:
             optimizer = self.optimizers[name]
-            optimizer.zero_grad(set_to_none=True)
+            if isinstance(optimizer, tuple):
+                for o in optimizer:
+                    o.zero_grad(set_to_none=True)
+            else:
+                optimizer.zero_grad(set_to_none=True)
 
     def optim_step(self):
         for name in self.models:
             if self.train[name]:
                 optimizer = self.optimizers[name]
-                optimizer.step()
+                if isinstance(optimizer, tuple):
+                    for o in optimizer:
+                        o.step()
+                else:
+                    optimizer.step()
 
     def reset_running_losses(self):
         self.running_loss = 0
@@ -78,9 +86,6 @@ class RocketLeagueModel(nn.Module):
         losses = ()
         for model in self.models:
             losses = losses + (self.models[model].loss,)
-        """loss_dict = {}
-        for model in self.models:
-            loss_dict[model] = self.models[model].loss"""
         return losses
 
     def init_train_models(self):
@@ -255,7 +260,11 @@ class RocketLeagueModel(nn.Module):
         self.running_b_vel_diff += M.euclid(b_vel_pred, ball_y[:, 3:6], self.config.ball_vel_norm_factor)
         self.running_b_ang_vel_diff += M.euclid(b_ang_vel_pred, ball_y[:, 6:9], self.config.ball_ang_vel_norm_factor)
         self.running_c_pos_diff += M.euclid(c_pos_pred, car_y[:, 0:3], self.config.car_pos_norm_factor)
+        if isinstance(c_forward_pred, tuple):
+            c_forward_pred = torch.cat(c_forward_pred, dim=1)
         self.running_c_forward_sim += M.cos_sim(c_forward_pred + x_train[:, 12:15], car_y[:, 3:6] + x_train[:, 12:15])
+        if isinstance(c_up_pred, tuple):
+            c_up_pred = torch.cat(c_up_pred, dim=1)
         self.running_c_up_sim += M.cos_sim(c_up_pred + x_train[:, 15:18], car_y[:, 6:9] + x_train[:, 15:18])
         self.running_c_vel_diff += M.euclid(c_vel_pred, car_y[:, 9:12], self.config.car_vel_norm_factor)
         self.running_c_ang_vel_diff += M.euclid(c_ang_vel_pred, car_y[:, 12:15], self.config.car_ang_vel_norm_factor)

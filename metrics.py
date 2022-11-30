@@ -85,6 +85,8 @@ class Metrics:
 
     def euclid(self, y_pred, y_true, norm_factor):
         dist = nn.PairwiseDistance()
+        if isinstance(y_pred, tuple):
+            y_pred = torch.cat(y_pred, dim=1)
         return torch.mean(
             dist(y_pred * norm_factor, y_true * norm_factor)).item()
 
