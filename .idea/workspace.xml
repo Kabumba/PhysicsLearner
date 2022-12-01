@@ -2,20 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updatede">
-      <change afterPath="$PROJECT_DIR$/ScalarModel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/VecModel.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/independentScalar.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RocketleagueModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/boolModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/BoolModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/independent1.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent1.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/independent2.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent2.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/independent3.py" beforeDir="false" afterPath="$PROJECT_DIR$/independent3.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/kickoff_dataset.py" beforeDir="false" afterPath="$PROJECT_DIR$/kickoff_dataset.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/metrics.py" beforeDir="false" afterPath="$PROJECT_DIR$/metrics.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/runscript.sh" beforeDir="false" afterPath="$PROJECT_DIR$/runscript.sh" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -103,6 +90,9 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -260,6 +250,7 @@
       <workItem from="1669711119579" duration="5448000" />
       <workItem from="1669724248698" duration="7044000" />
       <workItem from="1669810704497" duration="12771000" />
+      <workItem from="1669898912401" duration="595000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>

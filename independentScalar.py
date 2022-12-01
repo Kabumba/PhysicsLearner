@@ -122,8 +122,6 @@ class IndependentScalar(RocketLeagueModel):
             model = self.models[name]
             optimizer = self.optimizers[name]
             model_cp_path = os.path.join(self.config.checkpoint_path, name)
-            model_state = model.state_dict()
-            optimizer_state = optimizer.state_dict()
             if isinstance(model, VecModel):
                 model_state = {}
                 for n in model.models:
@@ -131,6 +129,9 @@ class IndependentScalar(RocketLeagueModel):
                 optimizer_state = ()
                 for o in optimizer:
                     optimizer_state = optimizer_state + (o.state_dict(),)
+            else:
+                model_state = model.state_dict()
+                optimizer_state = optimizer.state_dict()
             checkpoint = {
                 "step": model.steps,
                 "model_state": model_state,
