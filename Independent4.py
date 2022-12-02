@@ -16,19 +16,19 @@ class Independent4(RocketLeagueModel):
         super(Independent4, self).__init__(config)
 
         self.models = {
-            "bpos": BallVecModel(),
+            "bpos": BallVecModel(config),
             "bvel": VecModel(config, 43, config.hidden_size),
-            "bangvel": BallVecModel(),
-            "cpos": CarVecModel(),
-            "cforward": CarVecModel(),
-            "cup": CarVecModel(),
+            "bangvel": BallVecModel(config),
+            "cpos": CarVecModel(config),
+            "cforward": CarVecModel(config),
+            "cup": CarVecModel(config),
             "cvel": VecModel(config, 71, config.hidden_size),
-            "cangvel": CarVecModel(),
-            "conground": CarBoolModel(),
-            "cballtouch": CarBoolModel(),
-            "chasjump": CarBoolModel(),
-            "chasflip": CarBoolModel(),
-            "cisdemo": CarBoolModel(),
+            "cangvel": CarVecModel(config),
+            "conground": CarBoolModel(config),
+            "cballtouch": CarBoolModel(config),
+            "chasjump": CarBoolModel(config),
+            "chasflip": CarBoolModel(config),
+            "cisdemo": CarBoolModel(config),
         }
         self.init_train_models()
 

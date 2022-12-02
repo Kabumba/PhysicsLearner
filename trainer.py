@@ -178,4 +178,4 @@ def start_training(configs):
                 break
             if time.time() - start_time > config.max_minutes * 60:
                 break
-        log(f"{config.name} has trained for {config.max_steps} steps. Run over.")
+        log(f"{config.name} has trained for {steps} steps. Run over.")

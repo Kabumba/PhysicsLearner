@@ -4,10 +4,11 @@ import torch.nn.functional as F
 
 
 class CarBoolModel(nn.Module):
-    def __init__(self):
+    def __init__(self, config):
         super(CarBoolModel, self).__init__()
         self.bce = nn.BCELoss(reduction="none")
         self.loss = lambda y_pred, y: torch.mean(self.bce(y_pred, y), dim=1)
+        self.config = config
         self.steps = 0
 
         self.fc1 = nn.Linear(71, 47)

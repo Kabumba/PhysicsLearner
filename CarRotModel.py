@@ -4,10 +4,11 @@ import torch.nn.functional as F
 
 
 class CarRotModel(nn.Module):
-    def __init__(self):
+    def __init__(self, config):
         super(CarRotModel, self).__init__()
         self.mse = nn.MSELoss(reduction="none")
         self.loss = lambda y_pred, y: torch.mean(self.mse(y_pred, y), dim=1)
+        self.config = config
         self.steps = 0
 
         self.fc1 = nn.Linear(71, 52)
