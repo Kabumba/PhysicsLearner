@@ -30,6 +30,7 @@ class Configuration:
         self.hidden_size = 200
         self.num_hidden_layers = 2
         self.max_steps = 10000000
+        self.max_minutes = 9000000000000
         self.steps_per_checkpoint = 1000000
         self.steps_per_log = 1000
         self.steps_per_tensor_log = 1000

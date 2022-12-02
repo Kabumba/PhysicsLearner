@@ -1,12 +1,11 @@
-import math
 import os.path
-import random
-import shutil
+import time
 
 import torch
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 
+from Independent4 import Independent4
 from IndependentSplit import IndependentSplit
 from independentScalar import IndependentScalar
 from kickoff_dataset import KickoffEnsemble
@@ -16,8 +15,6 @@ from independent3 import Independent3
 from independent1 import Independent
 from independent2 import Independent2
 from naive import Naive
-from partition import create_partition
-from priority_sampler import PrioritySampler
 from split import Split
 
 """
@@ -39,6 +36,7 @@ def start_training(configs):
     log(f'Device: {device}')
     first = True
     for config in configs:
+        start_time = time.time()
         log(f"{config.name}")
         if first:
             first = False
@@ -74,6 +72,8 @@ def start_training(configs):
             model = Independent2(config)
         if config.model_type == "Independent3":
             model = Independent3(config)
+        if config.model_type == "Independent4":
+            model = Independent4(config)
         if config.model_type == "IndependentSplit":
             model = IndependentSplit(config)
         if config.model_type == "IndependentScalar":
@@ -166,10 +166,16 @@ def start_training(configs):
 
                     if steps >= config.max_steps:
                         break
+                    if time.time() - start_time > config.max_minutes * 60:
+                        break
                 del y_train
                 del x_train
                 if steps >= config.max_steps:
                     break
+                if time.time() - start_time > config.max_minutes * 60:
+                    break
             if steps >= config.max_steps:
                 break
-        log(f"Model has trained for {config.max_steps} steps. Run over.")
+            if time.time() - start_time > config.max_minutes * 60:
+                break
+        log(f"{config.name} has trained for {config.max_steps} steps. Run over.")

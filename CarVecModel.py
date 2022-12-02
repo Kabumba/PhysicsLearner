@@ -19,3 +19,6 @@ class CarVecModel(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
+
+    def init_optim(self):
+        return torch.optim.Adam(self.parameters(), lr=self.config.learning_rate)

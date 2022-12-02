@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="updatede">
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="checkpoint bug fix">
+      <change afterPath="$PROJECT_DIR$/Independent4.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RocketleagueModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/RocketleagueModel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/configuration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,9 +94,6 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -100,7 +101,7 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--name IndependentScalar" />
+      <option name="PARAMETERS" value="--name Independent4" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -250,7 +251,8 @@
       <workItem from="1669711119579" duration="5448000" />
       <workItem from="1669724248698" duration="7044000" />
       <workItem from="1669810704497" duration="12771000" />
-      <workItem from="1669898912401" duration="595000" />
+      <workItem from="1669898912401" duration="899000" />
+      <workItem from="1669985949283" duration="5063000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -546,7 +548,14 @@
       <option name="project" value="LOCAL" />
       <updated>1669731189874</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="checkpoint bug fix">
+      <created>1669920095662</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1669920095662</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -585,7 +594,8 @@
     <MESSAGE value="bugs" />
     <MESSAGE value="failed prio" />
     <MESSAGE value="updatede" />
-    <option name="LAST_COMMIT_MESSAGE" value="updatede" />
+    <MESSAGE value="checkpoint bug fix" />
+    <option name="LAST_COMMIT_MESSAGE" value="checkpoint bug fix" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1668415471141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
