@@ -3,11 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="independent4">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/BallVecModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/BallVecModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CarBoolModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/CarBoolModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CarRotModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/CarRotModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/CarVecModel.py" beforeDir="false" afterPath="$PROJECT_DIR$/CarVecModel.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Independent4.py" beforeDir="false" afterPath="$PROJECT_DIR$/Independent4.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -96,6 +91,9 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -254,7 +252,8 @@
       <workItem from="1669724248698" duration="7044000" />
       <workItem from="1669810704497" duration="12771000" />
       <workItem from="1669898912401" duration="899000" />
-      <workItem from="1669985949283" duration="6017000" />
+      <workItem from="1669985949283" duration="6621000" />
+      <workItem from="1670060476846" duration="707000" />
     </task>
     <task id="LOCAL-00001" summary="bisheriger progress am trainer">
       <created>1666689074893</created>
@@ -564,7 +563,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670024418413</updated>
     </task>
-    <option name="localTasksCounter" value="45" />
+    <task id="LOCAL-00045" summary="independent4">
+      <created>1670025225506</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1670025225506</updated>
+    </task>
+    <option name="localTasksCounter" value="46" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
