@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="lido mode">
-      <change beforePath="$PROJECT_DIR$/trainer.py" beforeDir="false" afterPath="$PROJECT_DIR$/trainer.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -259,14 +259,7 @@
       <workItem from="1669985949283" duration="6621000" />
       <workItem from="1670060476846" duration="1309000" />
       <workItem from="1670176490097" duration="607000" />
-      <workItem from="1670225478622" duration="5524000" />
-    </task>
-    <task id="LOCAL-00001" summary="bisheriger progress am trainer">
-      <created>1666689074893</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1666689074893</updated>
+      <workItem from="1670225478622" duration="6428000" />
     </task>
     <task id="LOCAL-00002" summary="test runscript">
       <created>1666699421237</created>
@@ -604,7 +597,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670253167800</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="lido mode">
+      <created>1670255488414</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1670255488415</updated>
+    </task>
+    <option name="localTasksCounter" value="51" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

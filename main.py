@@ -14,7 +14,7 @@ if __name__ == '__main__':
     lido = False
     if args.name == "LiDo":
         configurations = [Configuration(name) for name in os.listdir("../Experimente")]
-        lido = True
+        #lido = True
     else:
         configurations = [Configuration(args.name)]
     start_training(configurations, lido)
