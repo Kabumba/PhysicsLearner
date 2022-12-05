@@ -11,10 +11,9 @@ from observation_transformer import ObservationTransformer
 
 class KickoffDataset(Dataset):
 
-    def __init__(self, data_file, config: Configuration, device):
+    def __init__(self, data_file, config: Configuration):
         # data loading
         self.game_states = torch.load(data_file)
-        self.game_states.to(device)
         self.config = config
         normalize(config, self.game_states)
         # log(f'self.game_states {self.game_states.device}')
@@ -50,11 +49,11 @@ class KickoffDataset(Dataset):
                 mode = index % self.n_factor
                 sample = self.transform(sample, mode)
             # log(f'sample {(sample[0].device, sample[1].device)}')
-        except IndexError:
+        except IndexError as ie:
             log(f"Shape: {self.game_states.shape}")
             log(f"index: {index}")
             log(f"i: {i}")
-            raise
+            raise ie
         return sample
 
     def __len__(self):
@@ -62,15 +61,15 @@ class KickoffDataset(Dataset):
 
 
 class KickoffEnsemble(Dataset):
-    def __init__(self, data_dir, partition, config: Configuration, device):
+    def __init__(self, data_dir, partition, config: Configuration):
         self.config = config
         log(f"Loading new partition Data into RAM...")
         if partition is None:
             partition = os.listdir(data_dir)
-        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config, device) for file in partition]
+        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config) for file in partition]
         # log(f"Data Device: {self.kickoffs[0].game_states.device}")
-        self.n_samples = torch.sum(torch.tensor([k.n_samples for k in self.kickoffs])).item()
-        self.indices = torch.zeros(len(self.kickoffs))
+        self.n_samples = np.sum([k.n_samples for k in self.kickoffs])
+        self.indices = np.zeros((len(self.kickoffs),))
         self.indices[0] = self.kickoffs[0].n_samples
         for i in range(len(self.kickoffs) - 1):
             self.indices[i + 1] = self.indices[i] + self.kickoffs[i + 1].n_samples
@@ -89,7 +88,6 @@ class KickoffEnsemble(Dataset):
             log(f"outer_index: {index}")
             log(f"kickoff_index: {kickoff_index}")
             log(f"new_index: {new_index}")
-            raise
 
     def binary_search(self, start: int, end: int, value):
         if start == end:

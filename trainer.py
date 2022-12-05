@@ -32,10 +32,7 @@ from split import Split
 
 def start_training(configs, lido):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    data_set_device = torch.device('cpu')
-    if lido:
-        data_set_device = device
-    train_dataset = KickoffEnsemble(configs[0].train_path, None, configs[0], data_set_device)
+    train_dataset = KickoffEnsemble(configs[0].train_path, None, configs[0])
     log(f'Device: {device}')
     first = True
     for config in configs:
@@ -93,8 +90,8 @@ def start_training(configs, lido):
         # setup DataLoader
         free_mem, total_mem = torch.cuda.mem_get_info()
         batch_size = config.batch_size
-        pin_memory = config.pin_memory and not lido
-        num_workers = config.num_workers if not lido else 0
+        pin_memory = config.pin_memory # and not lido
+        num_workers = config.num_workers # if not lido else 0
         train_loader = DataLoader(dataset=train_dataset,
                                   batch_size=batch_size - config.loss_feedback,
                                   # batch_sampler=PrioritySampler(train_dataset, batch_size, 2),
