@@ -11,9 +11,9 @@ from observation_transformer import ObservationTransformer
 
 class KickoffDataset(Dataset):
 
-    def __init__(self, data_file, config: Configuration):
+    def __init__(self, data_file, config: Configuration, device):
         # data loading
-        self.game_states = torch.load(data_file)  # , map_location=lambda storage, loc: storage.cuda(0))
+        self.game_states = torch.load(data_file, map_location=device)
         self.config = config
         normalize(config, self.game_states)
         # log(f'self.game_states {self.game_states.device}')
@@ -54,14 +54,14 @@ class KickoffDataset(Dataset):
 
 
 class KickoffEnsemble(Dataset):
-    def __init__(self, data_dir, partition, config: Configuration):
+    def __init__(self, data_dir, partition, config: Configuration, device):
         self.config = config
         log(f"Loading new partition Data into RAM...")
         if partition is None:
             partition = os.listdir(data_dir)
-        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config) for file in partition]
+        self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config, device) for file in partition]
         # log(f"Data Device: {self.kickoffs[0].game_states.device}")
-        self.n_samples = np.sum(np.array([k.n_samples for k in self.kickoffs]))
+        self.n_samples = torch.sum(torch.tensor([k.n_samples for k in self.kickoffs], device=c))
         self.indices = np.zeros((len(self.kickoffs),))
         self.indices[0] = self.kickoffs[0].n_samples
         for i in range(len(self.kickoffs) - 1):

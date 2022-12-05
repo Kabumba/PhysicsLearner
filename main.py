@@ -11,10 +11,12 @@ if __name__ == '__main__':
     parser.add_argument('-n', '--name', help='Name of the experiment. Directory with this name should contain a '
                                              'configuration.yaml file where the hyperparameters for training are stored.')
     args = parser.parse_args()
+    lido = False
     if args.name == "LiDo":
         configurations = [Configuration(name) for name in os.listdir("../Experimente")]
+        lido = True
     else:
         configurations = [Configuration(args.name)]
-    start_training(configurations)
+    start_training(configurations, lido)
     log("Done!")
     sys.exit()

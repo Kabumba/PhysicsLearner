@@ -30,9 +30,12 @@ from split import Split
 # 1) model
 
 
-def start_training(configs):
-    train_dataset = KickoffEnsemble(configs[0].train_path, None, configs[0])
+def start_training(configs, lido):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    data_set_device = 'cpu'
+    if lido:
+        data_set_device = device
+    train_dataset = KickoffEnsemble(configs[0].train_path, None, configs[0], data_set_device)
     log(f'Device: {device}')
     first = True
     for config in configs:
