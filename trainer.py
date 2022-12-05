@@ -32,7 +32,7 @@ from split import Split
 
 def start_training(configs, lido):
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    data_set_device = 'cpu'
+    data_set_device = torch.device('cpu')
     if lido:
         data_set_device = device
     train_dataset = KickoffEnsemble(configs[0].train_path, None, configs[0], data_set_device)
