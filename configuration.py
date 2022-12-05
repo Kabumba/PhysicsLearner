@@ -6,6 +6,7 @@ from logger import log
 class Configuration:
     def __init__(self, name):
         self.name = name
+        log(name)
         self.base_path = ".."
         self.result_path = self.base_path + "/Experimente/" + name
         self.tensorboard_path = self.result_path + "/Tensorboard"
