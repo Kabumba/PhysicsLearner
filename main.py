@@ -14,9 +14,14 @@ if __name__ == '__main__':
     lido = False
     if args.name == "LiDo":
         configurations = [Configuration(name) for name in os.listdir("../Experimente")]
-        #lido = True
+        lido = True
+    elif args.name.isdigit():
+        i = int(args.name)
+        exps = os.listdir("../Experimente")
+        configurations = [Configuration(exps[i])]
     else:
         configurations = [Configuration(args.name)]
+    log(args.name)
     start_training(configurations, lido)
     log("Done!")
     sys.exit()

@@ -13,7 +13,8 @@ class KickoffDataset(Dataset):
 
     def __init__(self, data_file, config: Configuration, device):
         # data loading
-        self.game_states = torch.load(data_file, map_location=device)
+        self.game_states = torch.load(data_file)
+        self.game_states.to(device)
         self.config = config
         normalize(config, self.game_states)
         # log(f'self.game_states {self.game_states.device}')
@@ -61,8 +62,8 @@ class KickoffEnsemble(Dataset):
             partition = os.listdir(data_dir)
         self.kickoffs = [KickoffDataset((data_dir + "/" + file), self.config, device) for file in partition]
         # log(f"Data Device: {self.kickoffs[0].game_states.device}")
-        self.n_samples = torch.sum(torch.tensor([k.n_samples for k in self.kickoffs], device=device)).item()
-        self.indices = torch.zeros(len(self.kickoffs), device=device)
+        self.n_samples = torch.sum(torch.tensor([k.n_samples for k in self.kickoffs])).item()
+        self.indices = torch.zeros(len(self.kickoffs))
         self.indices[0] = self.kickoffs[0].n_samples
         for i in range(len(self.kickoffs) - 1):
             self.indices[i + 1] = self.indices[i] + self.kickoffs[i + 1].n_samples
