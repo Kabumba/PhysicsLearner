@@ -40,8 +40,9 @@ class KickoffDataset(Dataset):
             self.n_samples = self.n_factor * self.n_samples
 
     def __getitem__(self, index):
+
+        i = math.floor(index / self.n_factor)
         try:
-            i = math.floor(index / self.n_factor)
             x = self.game_states[i]
             y = self.game_states[i + 1][:85]
             sample = x, y
