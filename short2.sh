@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --partition=short
 #SBATCH --time=02:00:00
-#SBATCH --job-name=Test
+#SBATCH --job-name=Short2
 #SBATCH --output=/work/smfrrohk/Masterarbeit/Logs/run-%j.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
