@@ -98,7 +98,7 @@ def start_training(configs, lido):
                                   # batch_sampler=PrioritySampler(train_dataset, batch_size, 2),
                                   shuffle=True,
                                   num_workers=config.num_workers,
-                                  pin_memory=config.pin_memory,
+                                  pin_memory=config.pin_memory and lido,
                                   # generator=torch.Generator(device=device)
                                   )
 
