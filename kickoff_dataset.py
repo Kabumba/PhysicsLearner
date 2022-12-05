@@ -40,14 +40,20 @@ class KickoffDataset(Dataset):
             self.n_samples = self.n_factor * self.n_samples
 
     def __getitem__(self, index):
-        i = math.floor(index / self.n_factor)
-        x = self.game_states[i]
-        y = self.game_states[i + 1][:85]
-        sample = x, y
-        if self.transform:
-            mode = index % self.n_factor
-            sample = self.transform(sample, mode)
-        # log(f'sample {(sample[0].device, sample[1].device)}')
+        try:
+            i = math.floor(index / self.n_factor)
+            x = self.game_states[i]
+            y = self.game_states[i + 1][:85]
+            sample = x, y
+            if self.transform:
+                mode = index % self.n_factor
+                sample = self.transform(sample, mode)
+            # log(f'sample {(sample[0].device, sample[1].device)}')
+        except IndexError:
+            log(f"Shape: {self.game_states.shape}")
+            log(f"index: {index}")
+            log(f"i: {i}")
+            raise
         return sample
 
     def __len__(self):
@@ -70,12 +76,19 @@ class KickoffEnsemble(Dataset):
         log(f'Loaded {len(self.kickoffs)} files containing {self.n_samples} observations')
 
     def __getitem__(self, index):
+
         index = int(index)
         kickoff_index = self.binary_search(0, len(self.kickoffs) - 1, index)
         new_index = index
         if kickoff_index > 0:
             new_index -= self.indices[kickoff_index - 1]
-        return self.kickoffs[kickoff_index][new_index], index
+        try:
+            return self.kickoffs[kickoff_index][new_index], index
+        except IndexError:
+            log(f"outer_index: {index}")
+            log(f"kickoff_index: {kickoff_index}")
+            log(f"new_index: {new_index}")
+            raise
 
     def binary_search(self, start: int, end: int, value):
         if start == end:
