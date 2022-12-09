@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="umordnen">
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="long">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -261,14 +261,7 @@
       <workItem from="1670176490097" duration="607000" />
       <workItem from="1670225478622" duration="6428000" />
       <workItem from="1670315015164" duration="600000" />
-      <workItem from="1670579127760" duration="508000" />
-    </task>
-    <task id="LOCAL-00011" summary="runscripts">
-      <created>1666945360435</created>
-      <option name="number" value="00011" />
-      <option name="presentableId" value="LOCAL-00011" />
-      <option name="project" value="LOCAL" />
-      <updated>1666945360435</updated>
+      <workItem from="1670579127760" duration="978000" />
     </task>
     <task id="LOCAL-00012" summary="runscripts">
       <created>1666945921722</created>
@@ -606,7 +599,14 @@
       <option name="project" value="LOCAL" />
       <updated>1670278005952</updated>
     </task>
-    <option name="localTasksCounter" value="60" />
+    <task id="LOCAL-00060" summary="long">
+      <created>1670579898034</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1670579898035</updated>
+    </task>
+    <option name="localTasksCounter" value="61" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -625,7 +625,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="runscripts" />
     <MESSAGE value="training implemented, not tested yet" />
     <MESSAGE value="bugfixes, training läuft TODO: checkpoint loading fixen (cuda/cpu), model verbessern" />
     <MESSAGE value="experimente worker batch size" />
@@ -650,7 +649,8 @@
     <MESSAGE value="lido weg" />
     <MESSAGE value="checkpoint am ende" />
     <MESSAGE value="umordnen" />
-    <option name="LAST_COMMIT_MESSAGE" value="umordnen" />
+    <MESSAGE value="long" />
+    <option name="LAST_COMMIT_MESSAGE" value="long" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1668415471141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
