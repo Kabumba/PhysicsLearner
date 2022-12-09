@@ -2,13 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="umordnen">
-      <change afterPath="$PROJECT_DIR$/med0.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/med1.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/med2.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/med3.sh" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/med4.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/files.sh" beforeDir="false" afterPath="$PROJECT_DIR$/files.sh" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,6 +95,9 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -164,6 +161,9 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -260,6 +260,8 @@
       <workItem from="1670060476846" duration="1309000" />
       <workItem from="1670176490097" duration="607000" />
       <workItem from="1670225478622" duration="6428000" />
+      <workItem from="1670315015164" duration="600000" />
+      <workItem from="1670579127760" duration="508000" />
     </task>
     <task id="LOCAL-00011" summary="runscripts">
       <created>1666945360435</created>
