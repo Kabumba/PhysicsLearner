@@ -18,7 +18,7 @@ if __name__ == '__main__':
     elif args.name.isdigit():
         i = int(args.name)
         exps = os.listdir("../Experimente/Sammlung")
-        configurations = [Configuration(exps[i])]
+        configurations = [Configuration("/Sammlung/" + exps[i])]
     else:
         configurations = [Configuration(args.name)]
     log(args.name)
