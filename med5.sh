@@ -1,4 +1,4 @@
-med0.sh#!/bin/bash -l
+#!/bin/bash -l
 #SBATCH -c 10
 #SBATCH --mem 16G
 #SBATCH --gres=gpu:1
