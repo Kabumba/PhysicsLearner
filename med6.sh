@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --partition=med
 #SBATCH --time=08:00:00
-#SBATCH --job-name=Med1
+#SBATCH --job-name=Med6
 #SBATCH --output=/work/smfrrohk/Masterarbeit/Logs/run-%j.log
 #SBATCH --mail-user=frederik.rohkraehmer@tu-dortmund.de
 #SBATCH --mail-type=ALL
@@ -18,4 +18,4 @@ source /home/smfrrohk/anaconda3/bin/activate
 conda activate PhysicsLearner
 
 cd /work/smfrrohk/Masterarbeit/PhysicsLearner
-srun python main.py --name 1
+srun python main.py --name 6

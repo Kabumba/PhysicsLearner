@@ -17,7 +17,7 @@ if __name__ == '__main__':
         lido = True
     elif args.name.isdigit():
         i = int(args.name)
-        exps = os.listdir("../Experimente")
+        exps = os.listdir("../Experimente/Sammlung")
         configurations = [Configuration(exps[i])]
     else:
         configurations = [Configuration(args.name)]
