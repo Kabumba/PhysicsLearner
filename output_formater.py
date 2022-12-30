@@ -15,6 +15,7 @@ def car_output(x, y):
     y_car[:, 15:20] = y[:, 24:29]
     return y_car
 
+
 def output(x, y):
     output_dict = {}
     output_dict["bpos"] = y[:, 0:3] - x[:, 0:3]

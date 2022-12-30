@@ -90,9 +90,11 @@ class Metrics:
         return torch.mean(
             dist(y_pred * norm_factor, y_true * norm_factor)).item()
 
+
     def cos_sim(self, y_pred, y_true):
         return torch.mean(F.cosine_similarity(y_pred * self.config.car_ang_norm_factor,
                                               y_true * self.config.car_ang_norm_factor)).item()
+
 
     def acc(self, y_pred, y_true):
         og_pred = torch.gt(y_pred, 0.5).type(torch.float32)

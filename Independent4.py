@@ -121,7 +121,7 @@ class Independent4(RocketLeagueModel):
             "cisdemo": self.config.train_car_is_demo,
         }
 
-    def load_checkpoint(self):
+    def load_checkpoint(self, i=None):
         start_epoch = 0
         steps = 0
         if not os.path.exists(self.config.checkpoint_path):
@@ -134,7 +134,10 @@ class Independent4(RocketLeagueModel):
                 if p.endswith(".cph"):
                     cph_paths.append(p)
             if self.config.continue_from_checkpoint and len(checkpoints) > 0:
-                cph_file = max(cph_paths, key=os.path.getctime)
+                if i is None:
+                    cph_file = max(cph_paths, key=os.path.getctime)
+                else:
+                    cph_file = "cph_" + str(i) + ".cph"
                 log(f"Found existing model with that name, continue from latest checkpoint {cph_file}")
                 loaded_checkpoint = torch.load(cph_file, map_location="cuda:0")
                 start_epoch = loaded_checkpoint["epoch"]
@@ -147,7 +150,16 @@ class Independent4(RocketLeagueModel):
                     checkpoints = os.listdir(model_cp_path)
                     paths = [os.path.join(model_cp_path, basename) for basename in checkpoints]
                     if self.config.continue_from_checkpoint and len(checkpoints) > 0:
-                        cp_file = max(paths, key=os.path.getctime)
+                        if i is None:
+                            cp_file = max(paths, key=os.path.getctime)
+                        else:
+                            cp_file = None
+                            ending = str(i) + ".cp"
+                            for f in paths:
+                                if f.endswith(ending):
+                                    cp_file = f
+                            if cp_file is None:
+                                raise
                         log(f"Found existing model for {name}, continue from latest checkpoint {cp_file}")
                         loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
                         model.steps = loaded_checkpoint["step"]
