@@ -8,6 +8,7 @@ class Configuration:
         self.name = name
         log(name)
         self.base_path = ".."
+        self.validation_path = self.base_path + "/Ergebnisse/" + name
         self.result_path = self.base_path + "/Experimente/" + name
         self.tensorboard_path = self.result_path + "/Tensorboard"
         self.checkpoint_path = self.result_path + "/Checkpoints"

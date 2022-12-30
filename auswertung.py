@@ -1,3 +1,5 @@
+import math
+
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
@@ -7,24 +9,20 @@ from output_formater import ball_output, car_output
 
 
 class Auswerter:
-    def __init__(self, device):
+    def __init__(self, config, device):
         self.device = device
+        self.config = config
         # Contingency Tables  (x_test,  y_test,  y_pred)
         self.tables = []
         for i in range(5):
             self.tables.append(torch.zeros((2, 2, 2), device=self.device))
-        self.cont_on_ground = torch.zeros((2, 2, 2), device=self.device)
-        self.cont_ball_touch = torch.zeros((2, 2, 2), device=self.device)
-        self.cont_has_jump = torch.zeros((2, 2, 2), device=self.device)
-        self.cont_has_flip = torch.zeros((2, 2, 2), device=self.device)
-        self.cont_is_demo = torch.zeros((2, 2, 2), device=self.device)
 
         # Stats
         # [b_pos, b_vel, b_ang_vel, c_pos, c_vel, c_ang_vel, c_forward, c_up] x
-        # [n, min, max, sum, sum_of_squares]
+        # [n, min, max, sum, sum_of_squares, mean, sdv]
         self.stats = []
         for i in range(39):
-            self.stats.append(torch.zeros((8, 5), device=self.device))
+            self.stats.append(torch.zeros((8, 7), device=self.device))
             self.stats[0][:, :, 1] = 1000000
 
     def gather_info(self, y_pred, y_test, x_test):
@@ -162,8 +160,24 @@ class Auswerter:
         for i in range(len(indices)):
             self.stats[i] = generate_stats(self.stats[i], indices[i], Dists)
 
+    # Berechnen von Arithmetischem Mittel und Standardabweichung
+    def finish_stats(self):
+        for i in range(len(self.stats)):
+            for j in range(8):
+                n = self.stats[i][j][0]
+                self.stats[i][j][5] = self.stats[i][j][3] / n
+                mean2 = self.stats[i][j][5] * self.stats[i][j][5]
+                SSD = self.stats[i][j][4] - (n * mean2)
+                Var = SSD / (n-1)
+                sdv = math.sqrt(Var)
+                self.stats[i][j][6] = sdv
+
     def save(self):
-        pass
+        path = self.config.result_path
+        torch.save((self.tables, self.stats), path + "/Auswertung.pt")
+
+    def load(self, path):
+        self.tables, self.stats = torch.load(path)
 
 
 def L2(y_pred, y_true):
@@ -186,6 +200,8 @@ def generate_stats(stat_tensor, indices, dists):
         stat_tensor[i][3] += torch.sum(dists[indices, i]).item()
         stat_tensor[i][4] += torch.sum(torch.square(dists[indices, i])).item()
     return stat_tensor
+
+
 
 
 def ball_near_wall(x_test):
