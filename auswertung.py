@@ -23,7 +23,7 @@ class Auswerter:
         self.stats = []
         for i in range(39):
             self.stats.append(torch.zeros((8, 7), device=self.device))
-            self.stats[0][:, :, 1] = 1000000
+            self.stats[0][:, 1] = 1000000
 
     def gather_info(self, y_pred, y_test, x_test):
         n = x_test.shape[0]
@@ -67,7 +67,7 @@ class Auswerter:
 
         indices = []
         # 0 all
-        indices.append(torch.Tensor(range(n)))
+        indices.append(torch.LongTensor(range(n)))
         # 1 on_ground
         indices.append(torch.nonzero(x_test[:, 25]))
         # 2 not on_ground
@@ -99,7 +99,7 @@ class Auswerter:
         # 14 zero steer
         indices.append(torch.nonzero(x_test[:, 86] == 0))
         # 15 not zero steer
-        indices.append(torch.nonzero(1 - x_test[:, 86] != 0))
+        indices.append(torch.nonzero(x_test[:, 86] != 0))
 
         # 16 negative pitch
         indices.append(torch.nonzero(x_test[:, 87] < 0))
@@ -111,11 +111,11 @@ class Auswerter:
         # 19 zero yaw
         indices.append(torch.nonzero(x_test[:, 88] == 0))
         # 20 not zero yaw
-        indices.append(torch.nonzero(1 - x_test[:, 88] != 0))
+        indices.append(torch.nonzero(x_test[:, 88] != 0))
         # 21 zero roll
         indices.append(torch.nonzero(x_test[:, 89] == 0))
         # 22 not zero roll
-        indices.append(torch.nonzero(1 - x_test[:, 89] != 0))
+        indices.append(torch.nonzero(x_test[:, 89] != 0))
 
         # 23 jump
         indices.append(torch.nonzero(x_test[:, 90]))
@@ -154,13 +154,12 @@ class Auswerter:
         # Contingency Tables
         for i in range(len(bool_preds)):
             for j in range(n):
-                self.tables[i][int(x_test[j, 25 + i]), int(y_test[j, 15 + i]), int(bool_preds[i][j])] += 1
-
+                self.tables[i][int(x_test[j, 25 + i]), int(car_y[j, 15 + i]), int(bool_preds[i][j])] += 1
         # Stats
         for i in range(len(indices)):
             self.stats[i] = generate_stats(self.stats[i], indices[i], Dists)
 
-    # Berechnen von Arithmetischem Mittel und Standardabweichung
+    # Berechnen von arithmetischem Mittel und Standardabweichung
     def finish_stats(self):
         for i in range(len(self.stats)):
             for j in range(8):
@@ -168,7 +167,7 @@ class Auswerter:
                 self.stats[i][j][5] = self.stats[i][j][3] / n
                 mean2 = self.stats[i][j][5] * self.stats[i][j][5]
                 SSD = self.stats[i][j][4] - (n * mean2)
-                Var = SSD / (n-1)
+                Var = SSD / (n - 1)
                 sdv = math.sqrt(Var)
                 self.stats[i][j][6] = sdv
 
@@ -193,15 +192,14 @@ def angle(y_pred, y_true):
 
 def generate_stats(stat_tensor, indices, dists):
     n = indices.shape[0]
-    for i in range(8):
-        stat_tensor[i][0] += n
-        stat_tensor[i][1] = min(stat_tensor[i][1], torch.min(dists[indices, i]).item())
-        stat_tensor[i][2] = max(stat_tensor[i][2], torch.max(dists[indices, i]).item())
-        stat_tensor[i][3] += torch.sum(dists[indices, i]).item()
-        stat_tensor[i][4] += torch.sum(torch.square(dists[indices, i])).item()
+    if n > 0:
+        for i in range(8):
+            stat_tensor[i][0] += n
+            stat_tensor[i][1] = min(stat_tensor[i][1], torch.min(dists[indices, i]).item())
+            stat_tensor[i][2] = max(stat_tensor[i][2], torch.max(dists[indices, i]).item())
+            stat_tensor[i][3] += torch.sum(dists[indices, i]).item()
+            stat_tensor[i][4] += torch.sum(torch.square(dists[indices, i])).item()
     return stat_tensor
-
-
 
 
 def ball_near_wall(x_test):
@@ -209,17 +207,17 @@ def ball_near_wall(x_test):
     y = x_test[:, 1]
     # Arenawand -100
     near = x > 3996
-    near = near or x < -3996
-    near = near or y > 5020
-    near = near or y < -5020
-    return near
+    near = torch.logical_or(near, x < -3996)
+    near = torch.logical_or(near, y > 5020)
+    near = torch.logical_or(near, y < -5020)
+    return near.float()
 
 
 def ball_near_ceiling(x_test):
     z = x_test[:, 3]
     # Deckenhöhe -100
     near = z > 1944
-    return near
+    return near.float()
 
 
 def car_near_wall(x_test):
@@ -227,21 +225,21 @@ def car_near_wall(x_test):
     y = x_test[:, 10]
     # Arenawand -101,58
     near = x > 3994.42
-    near = near or x < -3994.42
-    near = near or y > 5018.42
-    near = near or y < -5018.42
-    return near
+    near = torch.logical_or(near, x < -3994.42)
+    near = torch.logical_or(near, y > 5018.42)
+    near = torch.logical_or(near, y < -5018.42)
+    return near.float()
 
 
 def car_near_ceiling(x_test):
     z = x_test[:, 11]
     # Deckenhöhe -101,58
     near = z > 1942.42
-    return near
+    return near.float()
 
 
 def car_near_car(x_test):
     # 2 * 101,58
     dist = L2(x_test[:, 47:50], x_test[:, 9:12])
     near = dist < 203.16
-    return near
+    return near.float()

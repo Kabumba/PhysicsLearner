@@ -136,9 +136,9 @@ class Independent4(RocketLeagueModel):
             if self.config.continue_from_checkpoint and len(checkpoints) > 0:
                 if i is None:
                     cph_file = max(cph_paths, key=os.path.getctime)
+                    log(f"Found existing model with that name, continue from latest checkpoint {cph_file}")
                 else:
-                    cph_file = "cph_" + str(i) + ".cph"
-                log(f"Found existing model with that name, continue from latest checkpoint {cph_file}")
+                    cph_file = os.path.join(self.config.checkpoint_path, "cph_" + str(i) + ".cph")
                 loaded_checkpoint = torch.load(cph_file, map_location="cuda:0")
                 start_epoch = loaded_checkpoint["epoch"]
                 steps = loaded_checkpoint["step"]
@@ -152,6 +152,7 @@ class Independent4(RocketLeagueModel):
                     if self.config.continue_from_checkpoint and len(checkpoints) > 0:
                         if i is None:
                             cp_file = max(paths, key=os.path.getctime)
+                            log(f"Found existing model for {name}, continue from latest checkpoint {cp_file}")
                         else:
                             cp_file = None
                             ending = str(i) + ".cp"
@@ -160,7 +161,6 @@ class Independent4(RocketLeagueModel):
                                     cp_file = f
                             if cp_file is None:
                                 raise
-                        log(f"Found existing model for {name}, continue from latest checkpoint {cp_file}")
                         loaded_checkpoint = torch.load(cp_file, map_location="cuda:0")
                         model.steps = loaded_checkpoint["step"]
                         if isinstance(model, VecModel):

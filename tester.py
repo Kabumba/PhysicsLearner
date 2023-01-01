@@ -1,4 +1,5 @@
 import os.path
+import sys
 import time
 
 import torch
@@ -7,6 +8,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 from Independent4 import Independent4
 from IndependentSplit import IndependentSplit
+from IndependentTest import IndependentTest
 from independentScalar import IndependentScalar
 from kickoff_dataset import KickoffEnsemble
 from logger import log
@@ -39,7 +41,8 @@ def remove_suffix(string, suffix):
 
 
 def start_testing(configs):
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    device = torch.device('cpu')
     test_dataset = KickoffEnsemble(configs[0].test_path, None, configs[0])
     log(f'Device: {device}')
     first = True
@@ -83,7 +86,7 @@ def start_testing(configs):
             cp = remove_suffix(cp, ".cph")
             cp_indices.append(int(cp))
         cp_indices.sort()
-        for i in range(len(cp_indices)):
+        for i in cp_indices:
             model = None
             if config.model_type == "Naive":
                 model = Naive(config)
@@ -101,6 +104,8 @@ def start_testing(configs):
                 model = IndependentSplit(config)
             if config.model_type == "IndependentScalar":
                 model = IndependentScalar(config)
+            if config.model_type == "IndependentTest":
+                model = IndependentTest(config)
             if config.model_type is None:
                 raise ValueError(f'{config.model_type} is not a supported model type!')
             model.to(device)
@@ -114,7 +119,7 @@ def start_testing(configs):
         free_mem, total_mem = torch.cuda.mem_get_info()
         batch_size = config.batch_size
         pin_memory = config.pin_memory # and not lido
-        num_workers = config.num_workers # if not lido else 0
+        num_workers = 1
         n = len(test_dataset)
         test_loader = DataLoader(dataset=test_dataset,
                                   batch_size=batch_size,
@@ -125,10 +130,10 @@ def start_testing(configs):
                                   # generator=torch.Generator(device=device)
                                   )
 
-        log(f"Total Memory: {total_mem}B, Free Memory: {free_mem}B, Batch Size: {batch_size}, Loss Feedback: {config.loss_feedback}, Worker: {config.num_workers}")
+        log(f"Total Memory: {total_mem}B, Free Memory: {free_mem}B, Batch Size: {batch_size}, Loss Feedback: {config.loss_feedback}, Worker: {num_workers}")
 
         iterations_last_tensor_log = 0
-        auswerter = Auswerter(device)
+        auswerter = Auswerter(config, device)
         progress = 0
         percent = 0
 
@@ -136,11 +141,11 @@ def start_testing(configs):
         log(f"-------------- Start Testing! --------------")
         for _, ((x_test, y_test), indices) in enumerate(test_loader):
             x_test, y_test = x_test.to(device, non_blocking=True), y_test.to(device, non_blocking=True)
+            iterations_last_tensor_log += 1
             for i in range(len(cp_indices)):
                 model = models[i]
                 y_predicted = model(x_test)
                 _, _ = model.criterion(y_predicted, y_test, x_test)
-                iterations_last_tensor_log += 1
                 if i == len(cp_indices)-1:
                     #Ausführliche Auswertung des letzten checkpoints
                     auswerter.gather_info(y_predicted, y_test, x_test)
@@ -148,7 +153,7 @@ def start_testing(configs):
             del y_predicted
             del y_test
             del x_test
-            if percent - 100*progress/n > 0.01:
+            if 100*progress/n - percent > 0.01:
                 percent = 100*progress/n
                 log(f"Verarbeitet: {percent:.2f}%")
         auswerter.save()
