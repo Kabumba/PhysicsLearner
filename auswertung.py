@@ -1,4 +1,5 @@
 import math
+import sys
 
 import torch
 import torch.nn.functional as F
@@ -18,6 +19,7 @@ class Auswerter:
             self.tables.append(torch.zeros((2, 2, 2), device=self.device))
 
         # Stats
+        # [partition] x
         # [b_pos, b_vel, b_ang_vel, c_pos, c_vel, c_ang_vel, c_forward, c_up] x
         # [n, min, max, sum, sum_of_squares, mean, sdv]
         self.stats = []
@@ -64,6 +66,23 @@ class Auswerter:
         bool_preds.append(torch.gt(c_has_flip_pred, 0.5).type(torch.float32))
         # 4 is_demo
         bool_preds.append(torch.gt(c_is_demo_pred, 0.5).type(torch.float32))
+
+        # Contingency Tables
+        for i in range(len(bool_preds)):
+            sum_pre = torch.sum(self.tables[i]).item()
+            for x in range(2):
+                for y in range(2):
+                    for y_pred in range(2):
+                        a1 = x_test[:, 25 + i] == x
+                        a2 = car_y[:, 15 + i] == y
+                        a3 = bool_preds[i][:, 0] == y_pred
+                        count = torch.nonzero(torch.logical_and(a1, torch.logical_and(a2, a3))).shape[0]
+                        self.tables[i][x, y, y_pred] += count
+            '''for j in range(n):
+                self.tables[i][int(x_test[j, 25 + i]), int(car_y[j, 15 + i]), int(bool_preds[i][j,0])] += 1'''
+            sum_post = torch.sum(self.tables[i]).item()
+            if sum_post - sum_pre != n:
+                print(f"n: {n}, sum_diff: {sum_post - sum_pre}")
 
         indices = []
         # 0 all
@@ -151,10 +170,6 @@ class Auswerter:
         # 38 not car near car
         indices.append(torch.nonzero(1 - cncr))
 
-        # Contingency Tables
-        for i in range(len(bool_preds)):
-            for j in range(n):
-                self.tables[i][int(x_test[j, 25 + i]), int(car_y[j, 15 + i]), int(bool_preds[i][j])] += 1
         # Stats
         for i in range(len(indices)):
             self.stats[i] = generate_stats(self.stats[i], indices[i], Dists)
@@ -187,7 +202,12 @@ def L2(y_pred, y_true):
 
 
 def angle(y_pred, y_true):
-    return torch.rad2deg(torch.acos(F.cosine_similarity(y_pred, y_true)))
+    sims = F.cosine_similarity(y_pred, y_true)
+    rads = torch.acos(sims)
+    nan_i = torch.nonzero(torch.isnan(rads))
+    rads[nan_i] = 0
+    degs = torch.rad2deg(rads)
+    return degs
 
 
 def generate_stats(stat_tensor, indices, dists):

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="saving, loading">
-      <change afterPath="$PROJECT_DIR$/IndependentTest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/partition_tables.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tables.py" afterDir="false" />
+    <list default="true" id="e5a49b22-7c67-426f-ac68-52b810007ff9" name="Default Changelist" comment="auswertung weiter">
+      <change afterPath="$PROJECT_DIR$/errorbars.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/partition_plots.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Independent4.py" beforeDir="false" afterPath="$PROJECT_DIR$/Independent4.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/auswertung.py" beforeDir="false" afterPath="$PROJECT_DIR$/auswertung.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tables.py" beforeDir="false" afterPath="$PROJECT_DIR$/tables.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/tester.py" beforeDir="false" afterPath="$PROJECT_DIR$/tester.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -52,7 +51,7 @@
       <recent name="C:\Users\Frederik\Masterarbeit\PhysicsLearner" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.tables">
+  <component name="RunManager" selected="Python.partition_plots">
     <configuration default="true" type="PythonConfigurationType" factoryName="Python">
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -67,6 +66,28 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="errorbars" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PhysicsLearner" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/errorbars.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -97,10 +118,35 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="partition_plots" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="PhysicsLearner" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/partition_plots.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="true" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="partition_tables" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -142,6 +188,9 @@
       <module name="PhysicsLearner" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
       <option name="SDK_HOME" value="" />
       <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
       <option name="IS_MODULE_SDK" value="true" />
@@ -149,50 +198,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="C:\Users\Frederik\Masterarbeit\PhysicsLearner\tables.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="tutorial" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="PhysicsLearner" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/tutorial.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="true" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="umordnen" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="PhysicsLearner" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/umordnen.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="true" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -226,19 +231,19 @@
     <list>
       <item itemvalue="Python.main" />
       <item itemvalue="Python.validate" />
+      <item itemvalue="Python.errorbars" />
+      <item itemvalue="Python.partition_plots" />
       <item itemvalue="Python.partition_tables" />
       <item itemvalue="Python.tables" />
       <item itemvalue="Python.tables (1)" />
-      <item itemvalue="Python.umordnen" />
-      <item itemvalue="Python.tutorial" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.partition_plots" />
+        <item itemvalue="Python.errorbars" />
+        <item itemvalue="Python.tables (1)" />
         <item itemvalue="Python.tables" />
         <item itemvalue="Python.partition_tables" />
-        <item itemvalue="Python.tables (1)" />
-        <item itemvalue="Python.umordnen" />
-        <item itemvalue="Python.tutorial" />
       </list>
     </recent_temporary>
   </component>
@@ -316,14 +321,7 @@
       <workItem from="1671193608206" duration="592000" />
       <workItem from="1671615853473" duration="58276000" />
       <workItem from="1672482946798" duration="24168000" />
-      <workItem from="1672545581400" duration="1042000" />
-    </task>
-    <task id="LOCAL-00018" summary="runscripts">
-      <created>1666953368077</created>
-      <option name="number" value="00018" />
-      <option name="presentableId" value="LOCAL-00018" />
-      <option name="project" value="LOCAL" />
-      <updated>1666953368077</updated>
+      <workItem from="1672545581400" duration="21414000" />
     </task>
     <task id="LOCAL-00019" summary="runscripts">
       <created>1667220181759</created>
@@ -661,7 +659,14 @@
       <option name="project" value="LOCAL" />
       <updated>1672438541916</updated>
     </task>
-    <option name="localTasksCounter" value="67" />
+    <task id="LOCAL-00067" summary="auswertung weiter">
+      <created>1672575014397</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1672575014397</updated>
+    </task>
+    <option name="localTasksCounter" value="68" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -680,7 +685,6 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
-    <MESSAGE value="tweaks and polish" />
     <MESSAGE value="fix checkpoint loading" />
     <MESSAGE value="updates" />
     <MESSAGE value="elementarisierung" />
@@ -705,7 +709,8 @@
     <MESSAGE value="med" />
     <MESSAGE value="Fette Auswertung" />
     <MESSAGE value="saving, loading" />
-    <option name="LAST_COMMIT_MESSAGE" value="saving, loading" />
+    <MESSAGE value="auswertung weiter" />
+    <option name="LAST_COMMIT_MESSAGE" value="auswertung weiter" />
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/PhysicsLearner$main.coverage" NAME="main Coverage Results" MODIFIED="1668415471141" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />

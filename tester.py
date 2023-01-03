@@ -86,6 +86,7 @@ def start_testing(configs):
             cp = remove_suffix(cp, ".cph")
             cp_indices.append(int(cp))
         cp_indices.sort()
+        cp_indices = [cp_indices[len(cp_indices)-1]]
         for i in cp_indices:
             model = None
             if config.model_type == "Naive":
@@ -156,6 +157,7 @@ def start_testing(configs):
             if 100*progress/n - percent > 0.01:
                 percent = 100*progress/n
                 log(f"Verarbeitet: {percent:.2f}%")
+        auswerter.finish_stats()
         auswerter.save()
         for i in range(len(cp_indices)):
             # tensorboard logs
